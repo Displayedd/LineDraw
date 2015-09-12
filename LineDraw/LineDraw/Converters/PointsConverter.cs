@@ -11,8 +11,9 @@ using System.Windows.Media;
 namespace LineDraw.Converters
 {
     /// <summary>
-    /// Provides conversion between an array of <see cref="LineDraw.Models.Points"/>
-    /// and a <see cref="System.Windows.Media.PointCollection"/>.
+    /// This class provides conversion between  
+    /// <see cref="LineDraw.Models.Point"/> array
+    /// and <see cref="System.Windows.Media.PointCollection"/>.
     /// </summary>
     public class PointsConverter : IValueConverter
     {

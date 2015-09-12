@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 namespace LineDraw.Services
 {
     /// <summary>
-    /// This class provides facilities to add lines to a canvas.
+    /// This class provides facilities for a viewmodel to 
+    /// communicate with the model.
     /// </summary>
     public class LineService : ILineService
     {
@@ -41,7 +42,7 @@ namespace LineDraw.Services
         }
 
         /// <summary>
-        /// Compute and add a line in the underlying canvas model
+        /// Compute and add a line to the underlying canvas model
         /// based on the submitted start and end points.
         /// </summary>
         /// <param name="startPoint">The line start point.</param>

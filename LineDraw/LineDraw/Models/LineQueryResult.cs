@@ -9,7 +9,8 @@ namespace LineDraw.Models
     public class LineQueryResult
     {
         /// <summary>
-        /// The computed line. Null if <see pref="Success"/> is false.
+        /// The computed line. Should be set to null 
+        /// when <see pref="Success"/> is set to false.
         /// </summary>
         public Point[] Result { get; set; }
 

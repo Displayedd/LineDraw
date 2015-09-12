@@ -38,7 +38,7 @@ namespace LineDraw.Models
         }
 
         /// <summary>
-        /// Computes a line between the submitted lines.
+        /// Computes a line between the submitted points.
         /// </summary>
         /// <param name="startPoint">The start point.</param>
         /// <param name="endPoint">The end point.</param>

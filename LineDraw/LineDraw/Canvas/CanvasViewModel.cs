@@ -120,7 +120,7 @@ namespace LineDraw.Canvas
             // Clear error message before a new call.
             this.ErrorMessage = string.Empty;
 
-            // Query the ILineService with select start and end points.
+            // Query the ILineService with selected start and end points.
             LineQueryResult result = this.lineService.AddLine(startPoint, endPoint);
 
             // Process the query result.

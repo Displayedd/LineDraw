@@ -30,7 +30,6 @@ namespace LineDraw
         {
             this.Container = new UnityContainer();
             
-            // Register the particular model we want to use to determine line intersections.
             this.Container.RegisterType<ILineCalculator, BFSLineCalculator>(new ContainerControlledLifetimeManager());
             this.Container.RegisterType<ICanvasModel, GraphCanvasModel>(new ContainerControlledLifetimeManager());
             this.Container.RegisterType<ILineService, LineService>(new ContainerControlledLifetimeManager());
