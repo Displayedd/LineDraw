@@ -1,0 +1,30 @@
+﻿<Window x:Class="LineDraw.Canvas.CanvasView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ext="clr-namespace:LineDraw.External"
+        Title="Line draw" 
+        ResizeMode="NoResize" 
+        SizeToContent="WidthAndHeight"
+        ext:MouseBehaviour.MouseUpCommand="{Binding SelectPointCommand}">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary
+            Source="pack://application:,,,/LineDraw;component/Resources/Styles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+        <ItemsControl Height="{Binding CanvasHeight}" 
+                      Width="{Binding CanvasWidth}" 
+                      ItemsSource="{Binding Lines}"
+                      ItemTemplate="{StaticResource LineItemDataTemplate}"
+                       >
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Canvas />
+                </ItemsPanelTemplate>                
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+
+</Window>
