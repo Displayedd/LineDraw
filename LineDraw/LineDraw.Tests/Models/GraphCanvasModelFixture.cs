@@ -36,7 +36,7 @@ namespace LineDraw.Tests.Models
             Point[] line = new Point[] { startPoint, endPoint };
 
             Mock<ILineCalculator> mockedLineCalculator = new Mock<ILineCalculator>();
-            mockedLineCalculator.Setup(x => x.CalculateLine(It.IsAny<Node[][]>(),It.IsAny<Point>(),
+            mockedLineCalculator.Setup(x => x.CalculateLine(It.IsAny<Node[][]>(), It.IsAny<Point>(),
                 It.IsAny<Point>())).Returns(line).Verifiable();
 
             GraphCanvasModel target = new GraphCanvasModel(mockedLineCalculator.Object);
@@ -76,6 +76,33 @@ namespace LineDraw.Tests.Models
             mockedLineCalculator.VerifyAll();
             Assert.IsFalse(target.Graph[startPoint.X][startPoint.Y].Occupied);
             Assert.IsFalse(target.Graph[endPoint.X][endPoint.Y].Occupied);
+        }
+
+        [TestMethod]
+        public void WhenIsOccupiedCalled_ReturnsBool()
+        {
+            //Prepare
+            Point startPoint = new Point { X = 10, Y = 10 };
+            Point endPoint = new Point { X = 50, Y = 50 };
+            Point[] line = new Point[] { startPoint, endPoint };
+
+            Mock<ILineCalculator> mockedLineCalculator = new Mock<ILineCalculator>();
+            mockedLineCalculator.Setup(x => x.CalculateLine(It.IsAny<Node[][]>(), It.IsAny<Point>(),
+                It.IsAny<Point>())).Returns(line).Verifiable();
+
+            GraphCanvasModel target = new GraphCanvasModel(mockedLineCalculator.Object);
+            target.AddLine(startPoint, endPoint);
+
+            //Act
+            bool result1 = target.IsOccupied(startPoint);
+            bool result2 = target.IsOccupied(endPoint);
+            bool result3 = target.IsOccupied(new Point { X = 1, Y = 1 });
+
+            //Verify
+            mockedLineCalculator.VerifyAll();
+            Assert.IsTrue(result1);
+            Assert.IsTrue(result2);
+            Assert.IsFalse(result3);
         }
     }
 }

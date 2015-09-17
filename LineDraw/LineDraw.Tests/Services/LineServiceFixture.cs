@@ -98,5 +98,42 @@ namespace LineDraw.Tests.Models
             Assert.AreEqual(500, result.Height);
             Assert.AreEqual(600, result.Width);
         }
+
+        [TestMethod]
+        public void WhenSelectPointCalled_QuerySuccessfull()
+        {
+            //Prepare
+            Point point = new Point { X = 1, Y = 1 };
+            Mock<ICanvasModel> mockedCanvasModel = new Mock<ICanvasModel>();
+            mockedCanvasModel.Setup(x => x.IsOccupied(It.IsAny<Point>())).Returns(false).Verifiable();
+            ILineService target = new LineService(mockedCanvasModel.Object);
+
+            //Act
+            PointQueryResult result = target.SelectPoint(point);
+
+            //Verify
+            mockedCanvasModel.VerifyAll();
+            Assert.IsTrue(result.Success);
+            Assert.AreEqual(point.X, result.Result.X);
+            Assert.AreEqual(point.Y, result.Result.Y);
+        }
+
+        [TestMethod]
+        public void WhenSelectPointCalled_QueryUnsuccessfull()
+        {
+            //Prepare
+            Point point = new Point { X = 1, Y = 1 };
+            Mock<ICanvasModel> mockedCanvasModel = new Mock<ICanvasModel>();
+            mockedCanvasModel.Setup(x => x.IsOccupied(It.IsAny<Point>())).Returns(true).Verifiable();
+            ILineService target = new LineService(mockedCanvasModel.Object);
+
+            //Act
+            PointQueryResult result = target.SelectPoint(point);
+
+            //Verify
+            mockedCanvasModel.VerifyAll();
+            Assert.IsFalse(result.Success);
+            Assert.IsNotNull(result.Message);
+        }
     }
 }

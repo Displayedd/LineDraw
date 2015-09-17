@@ -2,11 +2,62 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:conv="clr-namespace:LineDraw.Converters">
     <conv:PointsConverter x:Key="PointsConverter" />
-    
+
+    <!-- Data template for lines -->
     <DataTemplate x:Key="LineItemDataTemplate">
-         <Polyline Stroke="Black" 
+        <Polyline Stroke="Black" 
                    StrokeThickness="1" 
                    Points="{Binding Mode=OneWay, Converter={StaticResource PointsConverter}}"/>
     </DataTemplate>
+
+    <!-- Data template for start and end point -->
+    <DataTemplate x:Key="PointContentDataTemplate">
+        <Canvas>
+            <Ellipse Name="StartPoint"
+                 Fill="Blue"
+                 Height="4"
+                 Width="4">
+                <Ellipse.RenderTransform>
+                    <TransformGroup>
+                    <TranslateTransform X="{Binding DataContext.StartPoint.X,
+                RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" 
+                                        Y="{Binding DataContext.StartPoint.Y,
+                RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                        <TranslateTransform X="-2" Y="-2"/>
+                    </TransformGroup>
+                </Ellipse.RenderTransform>
+            </Ellipse>
+            <Ellipse Name="EndPoint"
+                 Fill="Blue"
+                 Height="4"
+                 Width="4">
+                <Ellipse.RenderTransform>
+                    <TransformGroup>
+                        <TranslateTransform X="{Binding DataContext.StartPoint.X,
+                RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" 
+                                        Y="{Binding DataContext.StartPoint.Y,
+                RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
+                        <TranslateTransform X="-2" Y="-2"/>
+                    </TransformGroup>
+                </Ellipse.RenderTransform>
+            </Ellipse>
+        </Canvas>
+        <DataTemplate.Triggers>
+            <DataTrigger Binding="{Binding DataContext.StartPoint, 
+                RelativeSource={RelativeSource Mode=TemplatedParent}}" Value="{x:Null}">
+                <Setter TargetName="StartPoint" Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding DataContext.EndPoint, 
+                RelativeSource={RelativeSource Mode=TemplatedParent}}" Value="{x:Null}">
+                <Setter TargetName="EndPoint" Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+        </DataTemplate.Triggers>
+    </DataTemplate>
     
+    <!-- Data template for error message -->
+    <DataTemplate x:Key="ErrorMessageDataTemplate">
+        <TextBlock Text="{Binding}" 
+                   Foreground="Red"
+                   FontSize="14"/>
+    </DataTemplate>
 </ResourceDictionary>

@@ -26,14 +26,11 @@ namespace LineDraw.Misc
         /// <returns></returns>
         public Point[] CalculateLine(Node[][] graph, Point startPoint, Point endPoint)
         {
-            // TODO: catch index out of bounds exception.
-
             // Prepare the graph for searching.
             GraphTools<Node>.SearchReset(graph);
 
             // Queue that will hold the next nodes to be processed.
             Queue<Node> queue = new Queue<Node>();
-
 
             Node startNode = graph[startPoint.X][startPoint.Y];
             // Set the start node to be parent of itself to signify it as start point.

@@ -59,7 +59,37 @@ namespace LineDraw.Services
             }
             catch (Exception ex)
             {
-                result.Message = ex.Message;
+                result.Message = "Unable to find a path between points.";
+                result.Success = false;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Select the submitted point in the underlying canvas model.
+        /// </summary>
+        /// <param name="point">Point to select</param>
+        /// <returns>The result of the operation.</returns>
+        public PointQueryResult SelectPoint(Point point)
+        {
+            PointQueryResult result = new PointQueryResult();
+            try
+            {
+                bool occupied = this.canvasModel.IsOccupied(point);
+                if(occupied)
+                {                    
+                    result.Success = false;
+                    result.Message = "Selected point is occupied.";
+                }
+                else
+                {
+                    result.Result = point;
+                    result.Success = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Message = "Unable to select point.";
                 result.Success = false;
             }
             return result;

@@ -49,5 +49,15 @@ namespace LineDraw.Models
             // return a line consisting of the start and end point.
             return new Point[] { startPoint, endPoint };
         }
+
+        /// <summary>
+        /// Checks whether the submitted point is occupied by a line.
+        /// </summary>
+        /// <param name="point">Point to check</param>
+        /// <returns>True if submitted point is occupied by a line in the canvas model</returns>
+        public bool IsOccupied(Point point)
+        {
+            return false;
+        }
     }
 }

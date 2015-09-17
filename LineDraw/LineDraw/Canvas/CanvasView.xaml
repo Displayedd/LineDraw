@@ -5,7 +5,7 @@
         Title="Line draw" 
         ResizeMode="NoResize" 
         SizeToContent="WidthAndHeight"
-        ext:MouseBehaviour.MouseUpCommand="{Binding SelectPointCommand}">
+        >
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -14,17 +14,33 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-
-        <ItemsControl Height="{Binding CanvasHeight}" 
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid Grid.RowSpan="2" >
+            <!--Line container-->
+            <ItemsControl Height="{Binding CanvasHeight}" 
                       Width="{Binding CanvasWidth}" 
                       ItemsSource="{Binding Lines}"
-                      ItemTemplate="{StaticResource LineItemDataTemplate}"
-                       >
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <Canvas />
-                </ItemsPanelTemplate>                
-            </ItemsControl.ItemsPanel>
-        </ItemsControl>
-
+                      ItemTemplate="{StaticResource LineItemDataTemplate}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Canvas Background="White" 
+                        ext:MouseBehaviour.MouseUpCommand="{Binding SelectPointCommand}" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+            <!--Point container-->
+            <ContentControl ContentTemplate="{StaticResource PointContentDataTemplate}"
+                                IsHitTestVisible="False"/>
+        </Grid>
+        <!-- Error feedback-->
+        <ContentControl Content="{Binding ErrorMessage}"
+                        ContentTemplate="{StaticResource ErrorMessageDataTemplate}"
+                        IsHitTestVisible="False"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"/>
+    </Grid>
 </Window>

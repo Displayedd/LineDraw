@@ -11,6 +11,7 @@ namespace LineDraw.Interfaces
     {
         void ClearLines();
         LineQueryResult AddLine(Point startPoint, Point endPoint);
+        PointQueryResult SelectPoint(Point point);
         Size GetCanvasSize();
     }
 }

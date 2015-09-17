@@ -11,6 +11,7 @@ namespace LineDraw.Interfaces
     {
         void ClearLines();
         Point[] AddLine(Point startPoint, Point endPoint);
+        bool IsOccupied(Point point);
         int Height { get; }
         int Width { get; }
     }

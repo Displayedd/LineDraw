@@ -77,5 +77,15 @@ namespace LineDraw.Models
         {
             this.Graph = GraphTools<Node>.CreateGraph(this.Height, this.Width);
         }
+
+        /// <summary>
+        /// Checks whether the submitted point is occupied by a line.
+        /// </summary>
+        /// <param name="point">Point to check</param>
+        /// <returns>True if submitted point is occupied by a line in the canvas model</returns>
+        public bool IsOccupied(Point point)
+        {
+            return this.Graph[point.X][point.Y].Occupied;
+        }
     }
 }

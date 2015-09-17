@@ -1,6 +1,7 @@
 ﻿using LineDraw.External;
 using LineDraw.Interfaces;
 using LineDraw.Models;
+using Microsoft.Practices.Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,10 +18,14 @@ namespace LineDraw.Canvas
     /// <summary>
     /// This class implements the viewmodel for <see cref="CanvasView"/>.
     /// </summary>
-    public class CanvasViewModel
+    public class CanvasViewModel : BindableBase
     {
         private readonly ILineService lineService;
         private ICommand selectPointCommand;
+
+        private Point endPoint;
+        private Point startPoint;
+        private string errorMessage;
 
         #region Properties
         /// <summary>
@@ -41,12 +46,20 @@ namespace LineDraw.Canvas
         /// <summary>
         /// Start point for user selected line
         /// </summary>
-        public Point? StartPoint { get; set; }
+        public Point StartPoint
+        {
+            get { return this.startPoint; }
+            set { this.SetProperty(ref this.startPoint, value); }
+        }
 
         /// <summary>
         /// End point for user selected line
         /// </summary>
-        public Point? EndPoint { get; set; }
+        public Point EndPoint
+        {
+            get { return this.endPoint; }
+            set { SetProperty(ref this.endPoint, value); }
+        }
 
         /// <summary>
         /// Command object for selecting line points.
@@ -55,7 +68,7 @@ namespace LineDraw.Canvas
         {
             get
             {
-                if (selectPointCommand == null) 
+                if (selectPointCommand == null)
                     selectPointCommand = new RelayCommand(param => SelectPoint((MouseEventArgs)param));
                 return selectPointCommand;
             }
@@ -64,7 +77,11 @@ namespace LineDraw.Canvas
         /// <summary>
         /// Field for error messages from the ILineService.
         /// </summary>
-        public string ErrorMessage { get; set; }
+        public string ErrorMessage
+        {
+            get { return this.errorMessage; }
+            set { SetProperty(ref this.errorMessage, value); }
+        }
 
         #endregion
 
@@ -89,22 +106,38 @@ namespace LineDraw.Canvas
         /// <param name="e"></param>
         private void SelectPoint(MouseEventArgs e)
         {
+            // Clear error message
+            this.ErrorMessage = null;
+
             // Get the x.y position of the mouse event.
             int mouseX = (int)e.GetPosition((IInputElement)e.Source).X;
             int mouseY = (int)e.GetPosition((IInputElement)e.Source).Y;
 
-            // If start point has not been set the mouse event sets it.
+            // If start point has not been set the mouse event sets it.            
             if (StartPoint == null)
             {
-                StartPoint = new Point { X = mouseX, Y = mouseY };
+                PointQueryResult query = this.lineService.SelectPoint(new Point { X = mouseX, Y = mouseY });
+
+                if (query.Success)
+                    StartPoint = query.Result;
+                else
+                    ErrorMessage = query.Message;
             }
             // Else the mouse event sets the end point.
             else
             {
-                EndPoint = new Point { X = mouseX, Y = mouseY };
+                PointQueryResult query = this.lineService.SelectPoint(new Point { X = mouseX, Y = mouseY });
 
-                // Start and end point has been set so we line service.
-                AddLine(StartPoint.Value, EndPoint.Value);
+                if (query.Success)
+                    EndPoint = query.Result;
+                else
+                    ErrorMessage = query.Message;
+            }
+
+            // Start and end point has been set, ready to compute line.
+            if(StartPoint != null && EndPoint != null)
+            {                
+                AddLine(StartPoint, EndPoint);
 
                 // Reset start and end point for the next line.
                 StartPoint = null;
@@ -117,8 +150,8 @@ namespace LineDraw.Canvas
         /// </summary>
         private void AddLine(Point startPoint, Point endPoint)
         {
-            // Clear error message before a new call.
-            this.ErrorMessage = string.Empty;
+            // Clear error message
+            this.ErrorMessage = null;
 
             // Query the ILineService with selected start and end points.
             LineQueryResult result = this.lineService.AddLine(startPoint, endPoint);

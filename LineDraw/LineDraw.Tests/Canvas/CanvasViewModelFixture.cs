@@ -41,6 +41,9 @@ namespace LineDraw.Tests.Models
             Size size = new Size { Height = 500, Width = 500 };
             Mock<ILineService> mockedLineService = new Mock<ILineService>();
             mockedLineService.Setup(x => x.GetCanvasSize()).Returns(size).Verifiable();
+            mockedLineService.Setup(x => x.SelectPoint(It.Is<Point>(y => y.X == 0 && y.Y == 0))).
+                Returns((Point y) => new PointQueryResult { Result = y, Success = true }).Verifiable();
+
             CanvasViewModel target = new CanvasViewModel(mockedLineService.Object);
 
             //Act
@@ -48,8 +51,8 @@ namespace LineDraw.Tests.Models
             target.SelectPointCommand.Execute(e);
 
             //Verify
-            Assert.AreEqual(0, target.StartPoint.Value.X);
-            Assert.AreEqual(0, target.StartPoint.Value.Y);
+            Assert.AreEqual(0, target.StartPoint.X);
+            Assert.AreEqual(0, target.StartPoint.Y);
             Assert.IsNull(target.EndPoint);
             mockedLineService.VerifyAll();
         }
@@ -59,13 +62,16 @@ namespace LineDraw.Tests.Models
         {
             //Prepare
             Size size = new Size { Height = 500, Width = 500 };
-            Point[] line = new Point[] { new Point {X=1, Y=2}, new Point {X=3, Y=4}};
-            LineQueryResult queryResult = new LineQueryResult { Result = line, Success = true };
+            Point[] line = new Point[] { new Point { X = 1, Y = 2 }, new Point { X = 3, Y = 4 } };
+            LineQueryResult lineQueryResult = new LineQueryResult { Result = line, Success = true };
 
             Mock<ILineService> mockedLineService = new Mock<ILineService>();
             mockedLineService.Setup(x => x.GetCanvasSize()).Returns(size).Verifiable();
-            mockedLineService.Setup(x => x.AddLine(It.Is<Point>(y => y.X == 0 && y.Y==0),
-                It.Is<Point>(y => y.X == 0 && y.Y == 0))).Returns(queryResult).Verifiable();
+            mockedLineService.Setup(x => x.AddLine(It.Is<Point>(y => y.X == 0 && y.Y == 0),
+                It.Is<Point>(y => y.X == 0 && y.Y == 0))).Returns(lineQueryResult).Verifiable();
+
+            mockedLineService.Setup(x => x.SelectPoint(It.Is<Point>(y => y.X == 0 && y.Y == 0))).
+                Returns((Point y) => new PointQueryResult {Result = y, Success = true}).Verifiable();
 
             CanvasViewModel target = new CanvasViewModel(mockedLineService.Object);
 
