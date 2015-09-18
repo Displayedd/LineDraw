@@ -34,7 +34,7 @@ namespace LineDraw
             this.Container.RegisterType<ICanvasModel, GraphCanvasModel>(new ContainerControlledLifetimeManager());
             this.Container.RegisterType<ILineService, LineService>(new ContainerControlledLifetimeManager());
 
-            // Types not explicitly registered are auto-discovered by unity.
+            // Types not explicitly registered are auto-discovered by Unity.
         }
 
         /// <summary>

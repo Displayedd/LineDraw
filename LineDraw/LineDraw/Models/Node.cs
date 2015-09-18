@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LineDraw.Misc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,6 +27,12 @@ namespace LineDraw.Models
         public int X { get; set; }
         public int Y { get; set; }
         public double Distance { get; set; }
+
+        /// <summary>
+        /// Get IComparer for sorting by the Distance property.
+        /// </summary>
+        public static IComparer<Node> SortByDistance
+        { get { return new DistanceComparer<Node>(); } }
 
     }
 }

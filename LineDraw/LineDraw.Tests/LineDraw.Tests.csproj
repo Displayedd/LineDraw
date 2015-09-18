@@ -67,7 +67,9 @@
   <ItemGroup>
     <Compile Include="Canvas\CanvasViewModelFixture.cs" />
     <Compile Include="Converters\PointsConverterFixture.cs" />
+    <Compile Include="Misc\DijkstraLineCalculatorFixture.cs" />
     <Compile Include="Misc\BFSLineCalculatorFixture.cs" />
+    <Compile Include="Misc\DistanceComparerFixture.cs" />
     <Compile Include="Misc\GraphToolsFixture.cs" />
     <Compile Include="Models\GraphCanvasModelFixture.cs" />
     <Compile Include="Models\NaiveCanvasModelFixture.cs" />

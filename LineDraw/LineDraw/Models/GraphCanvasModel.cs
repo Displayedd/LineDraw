@@ -15,7 +15,7 @@ namespace LineDraw.Models
     public class GraphCanvasModel : ICanvasModel
     {
         private readonly ILineCalculator lineCalculator;
-        public Node[][] Graph {get; private set;}
+        public PriorityQueueNode[][] Graph {get; private set;}
 
         /// <summary>
         /// Create a new instance of this class using the submitted
@@ -47,7 +47,7 @@ namespace LineDraw.Models
         /// </summary>
         public void ClearLines()
         {
-            this.Graph = GraphTools<Node>.CreateGraph(this.Height, this.Width);
+            this.Graph = GraphTools<PriorityQueueNode>.CreateGraph(this.Height, this.Width);
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace LineDraw.Models
         /// </summary>
         private void InitializeGraph()
         {
-            this.Graph = GraphTools<Node>.CreateGraph(this.Height, this.Width);
+            this.Graph = GraphTools<PriorityQueueNode>.CreateGraph(this.Height, this.Width);
         }
 
         /// <summary>

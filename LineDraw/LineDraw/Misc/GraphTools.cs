@@ -36,7 +36,7 @@ namespace LineDraw.Misc
 
         /// <summary>
         /// Prepare the submitted graph for search traversal by
-        /// setting Visited to false and Parent to null.
+        /// setting Distance to max value and Parent to null.
         /// </summary>
         /// <param name="graph">The graph to reset.</param>
         public static void SearchReset(T[][] graph)
