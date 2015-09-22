@@ -11,7 +11,7 @@ using LineDraw.Misc;
 namespace LineDraw.Tests.Models
 {
     [TestClass]
-    public class DijkstraLineCalculatorFixture
+    public class AStarLineCalculatorFixture
     {
         [TestMethod]
         public void WhenCalculateLine_ReturnsPath()
@@ -21,10 +21,10 @@ namespace LineDraw.Tests.Models
             int width = 500;
             PriorityQueueNode[][] graph = GraphTools<PriorityQueueNode>.CreateGraph(height, width);
             Point startPoint1 = new Point {X = 10, Y = 10};
-            Point endPoint1 = new Point { X = 350, Y = 450 };
+            Point endPoint1 = new Point {X = 350, Y = 450};
             Point startPoint2 = new Point { X = 15, Y = 10 };
             Point endPoint2 = new Point { X = 60, Y = 50 };
-            DijkstraLineCalculator target = new DijkstraLineCalculator();
+            AStarLineCalculator target = new AStarLineCalculator();
 
             //Act
             Point[] result1 = target.CalculateLine(graph, startPoint1, endPoint1);

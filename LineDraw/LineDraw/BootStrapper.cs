@@ -30,7 +30,7 @@ namespace LineDraw
         {
             this.Container = new UnityContainer();
             
-            this.Container.RegisterType<ILineCalculator, BFSLineCalculator>(new ContainerControlledLifetimeManager());
+            this.Container.RegisterType<ILineCalculator, AStarLineCalculator>(new ContainerControlledLifetimeManager());
             this.Container.RegisterType<ICanvasModel, GraphCanvasModel>(new ContainerControlledLifetimeManager());
             this.Container.RegisterType<ILineService, LineService>(new ContainerControlledLifetimeManager());
 

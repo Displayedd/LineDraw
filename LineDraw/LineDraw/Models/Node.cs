@@ -34,5 +34,16 @@ namespace LineDraw.Models
         public static IComparer<Node> SortByDistance
         { get { return new DistanceComparer<Node>(); } }
 
+        /// <summary>
+        /// Get IComparer for sorting by the Distance property
+        /// with a predefined goal node.
+        /// </summary>
+        /// <param name="goal">The goal node</param>
+        /// <returns>A new instance of IComparer</returns>
+        public static IComparer<Node> SortByDirectedDistance(Node goal)
+        {
+            return new DirectedDistanceComparer<Node>(goal);
+        }
+
     }
 }

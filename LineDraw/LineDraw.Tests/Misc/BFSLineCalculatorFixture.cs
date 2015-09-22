@@ -17,11 +17,11 @@ namespace LineDraw.Tests.Models
         public void WhenCalculateLine_ReturnsPath()
         {
             //Prepare
-            int height = 100;
-            int width = 200;
+            int height = 500;
+            int width = 500;
             Node[][] graph = GraphTools<Node>.CreateGraph(height, width);
             Point startPoint = new Point {X = 10, Y = 10};
-            Point endPoint = new Point {X = 50, Y = 50};
+            Point endPoint = new Point { X = 350, Y = 450 };
             BFSLineCalculator target = new BFSLineCalculator();
 
             //Act

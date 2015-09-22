@@ -79,8 +79,10 @@
     <Compile Include="External\RelayCommand.cs" />
     <Compile Include="Interfaces\ICanvasModel.cs" />
     <Compile Include="Interfaces\ILineCalculator.cs" />
+    <Compile Include="Misc\AStarLineCalculator .cs" />
     <Compile Include="Misc\DijkstraLineCalculator.cs" />
     <Compile Include="Misc\BFSLineCalculator.cs" />
+    <Compile Include="Misc\DirectedDistanceComparer.cs" />
     <Compile Include="Misc\DistanceComparer.cs" />
     <Compile Include="Misc\GraphTools.cs" />
     <Compile Include="Models\PointQueryResult.cs" />

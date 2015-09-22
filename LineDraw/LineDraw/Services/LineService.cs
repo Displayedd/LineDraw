@@ -2,6 +2,7 @@
 using LineDraw.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,7 +26,7 @@ namespace LineDraw.Services
         {
             this.canvasModel = model;
         }
-        
+
         /// <summary>
         /// Clear all lines in the underlying canvas model associated with this instance.
         /// </summary>
@@ -37,8 +38,8 @@ namespace LineDraw.Services
             }
             catch (Exception ex)
             {
-
-            }            
+                Debug.Print(string.Format("Unable to clear lines: {0}", ex.Message));
+            }
         }
 
         /// <summary>
@@ -59,6 +60,7 @@ namespace LineDraw.Services
             }
             catch (Exception ex)
             {
+                Debug.Print(string.Format("Unable to add line: {0}", ex.Message));
                 result.Message = "Unable to find a path between points.";
                 result.Success = false;
             }
@@ -76,8 +78,8 @@ namespace LineDraw.Services
             try
             {
                 bool occupied = this.canvasModel.IsOccupied(point);
-                if(occupied)
-                {                    
+                if (occupied)
+                {
                     result.Success = false;
                     result.Message = "Selected point is occupied.";
                 }
@@ -89,19 +91,20 @@ namespace LineDraw.Services
             }
             catch (Exception ex)
             {
+                Debug.Print(string.Format("Unable to select point: {0}", ex.Message));
                 result.Message = "Unable to select point.";
                 result.Success = false;
             }
             return result;
         }
-        
+
         /// <summary>
         /// Get the size of the canvas in the underlying canvas model.
         /// </summary>
         /// <returns>The canvas size of the underlying canvas model.</returns>
         public Size GetCanvasSize()
         {
-            return new Size {Height = this.canvasModel.Height, Width = this.canvasModel.Width };
+            return new Size { Height = this.canvasModel.Height, Width = this.canvasModel.Width };
         }
     }
 }

@@ -2,6 +2,7 @@
 using LineDraw.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,6 +27,9 @@ namespace LineDraw.Misc
         /// <returns></returns>
         public Point[] CalculateLine(Node[][] graph, Point startPoint, Point endPoint)
         {
+            Stopwatch timer = new Stopwatch(); // DEBUG code
+            
+
             // Prepare the graph for searching.
             GraphTools<Node>.SearchReset(graph);
 
@@ -41,10 +45,20 @@ namespace LineDraw.Misc
             if (!startNode.Occupied)
                 queue.Enqueue(graph[startPoint.X][startPoint.Y]);
 
+            int count = 0; // DEBUG code
+            timer.Start(); // DEBUG code
             while (queue.Count > 0)
             {
+                count++;  // DEBUG code
+
                 // Next node in the queue.
                 Node current = queue.Dequeue();
+                // If we found the end point end loop
+                if (current.X == endPoint.X && current.Y == endPoint.Y)
+                {
+                    break;
+                }                    
+
                 // Get nodes adjacent to the node being processed.
                 Node[] adjacent = GraphTools<Node>.GetAdjacentElements(graph, current);
 
@@ -61,6 +75,8 @@ namespace LineDraw.Misc
                     }
                 }
             }
+            timer.Stop(); // DEBUG code
+            Debug.Print(string.Format("Number of iterations for BFS: {0}, time: {1}ms", count, timer.ElapsedMilliseconds));  // DEBUG code
 
             // Use the helper function to find the computed path and return it.
             return GetPath(graph[endPoint.X][endPoint.Y]);
