@@ -1,6 +1,7 @@
 ﻿using LineDraw.External;
 using LineDraw.Interfaces;
 using LineDraw.Models;
+using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Mvvm;
 using System;
 using System.Collections.Generic;
@@ -22,10 +23,12 @@ namespace LineDraw.Canvas
     {
         private readonly ILineService lineService;
         private ICommand selectPointCommand;
+        private ICommand clearLinesCommand;
 
         private Point endPoint;
         private Point startPoint;
         private string errorMessage;
+        private PathAlgorithm pathAlgorithm;
 
         #region Properties
         /// <summary>
@@ -61,6 +64,12 @@ namespace LineDraw.Canvas
             set { SetProperty(ref this.endPoint, value); }
         }
 
+        public PathAlgorithm PathAlgorithm
+        {
+            get { return this.pathAlgorithm; }
+            set { SetProperty(ref this.pathAlgorithm, value); }
+        }
+
         /// <summary>
         /// Command object for selecting line points.
         /// </summary>
@@ -71,6 +80,19 @@ namespace LineDraw.Canvas
                 if (selectPointCommand == null)
                     selectPointCommand = new RelayCommand(param => SelectPoint((MouseEventArgs)param));
                 return selectPointCommand;
+            }
+        }
+
+        /// <summary>
+        /// Command object for clearing lines.
+        /// </summary>
+        public ICommand ClearLinesCommand
+        {
+            get
+            {
+                if (clearLinesCommand == null)
+                    clearLinesCommand = new DelegateCommand(ClearLines);
+                return clearLinesCommand;
             }
         }
 
@@ -98,6 +120,7 @@ namespace LineDraw.Canvas
             this.CanvasHeight = canvasSize.Height;
             this.CanvasWidth = canvasSize.Width;
             this.Lines = new ObservableCollection<Point[]>();
+            this.PathAlgorithm = PathAlgorithm.BFS;
         }
 
         /// <summary>
@@ -154,7 +177,7 @@ namespace LineDraw.Canvas
             this.ErrorMessage = null;
 
             // Query the ILineService with selected start and end points.
-            LineQueryResult result = this.lineService.AddLine(startPoint, endPoint);
+            LineQueryResult result = this.lineService.AddLine(startPoint, endPoint, PathAlgorithm);
 
             // Process the query result.
             if (result.Success)
@@ -165,6 +188,20 @@ namespace LineDraw.Canvas
             {
                 this.ErrorMessage = result.Message;
             }
+        }
+
+        /// <summary>
+        /// Clear lines and points on the canvas.
+        /// </summary>
+        private void ClearLines()
+        {
+            // Clear lines in the model
+            this.lineService.ClearLines();
+            // Clear lines in viewmodel
+            this.Lines.Clear();
+            // Clear points
+            this.StartPoint = null;
+            this.EndPoint = null;
         }
     }
 }

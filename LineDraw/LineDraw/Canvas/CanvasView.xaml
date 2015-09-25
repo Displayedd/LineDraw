@@ -18,23 +18,29 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
             <RowDefinition />
-        </Grid.RowDefinitions>
+        </Grid.RowDefinitions>        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="150"/>
+        </Grid.ColumnDefinitions>
         <Grid Grid.RowSpan="2" >
             <!--Line container-->
-            <ItemsControl Height="{Binding CanvasHeight}" 
-                      Width="{Binding CanvasWidth}" 
-                      ItemsSource="{Binding Lines}"
-                      ItemTemplate="{StaticResource LineItemDataTemplate}">
+            <ItemsControl BorderBrush="Black" 
+                          BorderThickness="1"
+                          Height="{Binding CanvasHeight}" 
+                          Width="{Binding CanvasWidth}" 
+                          ItemsSource="{Binding Lines}"
+                          ItemTemplate="{StaticResource LineItemDataTemplate}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <Canvas Background="White" 
-                        ext:MouseBehaviour.MouseUpCommand="{Binding SelectPointCommand}" />
+                        <Canvas Background="White"
+                           ext:MouseBehaviour.MouseUpCommand="{Binding SelectPointCommand}" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
             <!--Point container-->
             <ContentControl ContentTemplate="{StaticResource PointContentDataTemplate}"
-                                IsHitTestVisible="False"/>
+                            IsHitTestVisible="False"/>
         </Grid>
         <!-- Error feedback-->
         <ContentControl Content="{Binding ErrorMessage}"
@@ -42,5 +48,16 @@
                         IsHitTestVisible="False"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"/>
+        <StackPanel Grid.Column="1"
+                    Grid.RowSpan="2">
+            <!--Path finding buttons-->
+            <ContentControl ContentTemplate="{StaticResource PathAlgorithmDataTemplate}"
+                            HorizontalAlignment="Center"
+                            />
+            <!--Reset button -->
+            <Button Command="{Binding ClearLinesCommand}"
+                    Content="Reset"
+                    VerticalAlignment="Bottom"/>
+        </StackPanel>
     </Grid>
 </Window>

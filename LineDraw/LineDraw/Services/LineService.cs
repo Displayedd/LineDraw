@@ -41,27 +41,28 @@ namespace LineDraw.Services
                 Debug.Print(string.Format("Unable to clear lines: {0}", ex.Message));
             }
         }
-
+        
         /// <summary>
         /// Compute and add a line to the underlying canvas model
-        /// based on the submitted start and end points.
+        /// based on the submitted start and end points using selected .
         /// </summary>
         /// <param name="startPoint">The line start point.</param>
         /// <param name="endPoint">The line end point.</param>
+        /// <param name="algorithm">Pathfinding algorithm to use, defualt is BFS.</param>
         /// <returns>The result of the operation.</returns>
-        public LineQueryResult AddLine(Point startPoint, Point endPoint)
+        public LineQueryResult AddLine(Point startPoint, Point endPoint, PathAlgorithm algorithm = PathAlgorithm.BFS)
         {
             LineQueryResult result = new LineQueryResult();
             try
             {
-                Point[] computedLine = this.canvasModel.AddLine(startPoint, endPoint);
+                Point[] computedLine = this.canvasModel.AddLine(startPoint, endPoint, algorithm);
                 result.Result = computedLine;
                 result.Success = true;
             }
             catch (Exception ex)
             {
                 Debug.Print(string.Format("Unable to add line: {0}", ex.Message));
-                result.Message = "Unable to find a path between points.";
+                result.Message = string.Format("Unable to find a path between points using {0} algorithm.", algorithm);
                 result.Success = false;
             }
             return result;

@@ -43,7 +43,7 @@ namespace LineDraw.Models
         /// <param name="startPoint">The start point.</param>
         /// <param name="endPoint">The end point.</param>
         /// <returns>The computed line.</returns>
-        public Point[] AddLine(Point startPoint, Point endPoint)
+        public Point[] AddLine(Point startPoint, Point endPoint, PathAlgorithm algorithm)
         {
             // We don't check for intersecting lines and simply
             // return a line consisting of the start and end point.

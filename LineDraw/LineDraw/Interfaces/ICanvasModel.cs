@@ -10,7 +10,7 @@ namespace LineDraw.Interfaces
     public interface ICanvasModel
     {
         void ClearLines();
-        Point[] AddLine(Point startPoint, Point endPoint);
+        Point[] AddLine(Point startPoint, Point endPoint, PathAlgorithm algorithm);
         bool IsOccupied(Point point);
         int Height { get; }
         int Width { get; }

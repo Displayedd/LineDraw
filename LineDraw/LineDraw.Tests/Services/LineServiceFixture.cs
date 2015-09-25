@@ -30,8 +30,11 @@ namespace LineDraw.Tests.Models
             Point startPoint = new Point { X = 1, Y = 1 };
             Point endPoint = new Point { X = 2, Y = 2 };
             Point[] mockedResult = new Point[] { startPoint, endPoint };
+
             Mock<ICanvasModel> mockedCanvasModel = new Mock<ICanvasModel>();
-            mockedCanvasModel.Setup(x => x.AddLine(It.IsAny<Point>(), It.IsAny<Point>())).Returns(mockedResult).Verifiable();
+            mockedCanvasModel.Setup(x => x.AddLine(It.IsAny<Point>(), It.IsAny<Point>(), 
+                It.Is<PathAlgorithm>(algo => algo == PathAlgorithm.BFS))).Returns(mockedResult).Verifiable();
+
             ILineService target = new LineService(mockedCanvasModel.Object);
 
             //Act
@@ -53,8 +56,10 @@ namespace LineDraw.Tests.Models
             Point startPoint = new Point { X = 1, Y = 1 };
             Point endPoint = new Point { X = 2, Y = 2 };
             Point[] mockedResult = new Point[] { startPoint, endPoint };
+
             Mock<ICanvasModel> mockedCanvasModel = new Mock<ICanvasModel>();
-            mockedCanvasModel.Setup(x => x.AddLine(It.IsAny<Point>(), It.IsAny<Point>())).Throws(new Exception("Failed")).Verifiable();
+            mockedCanvasModel.Setup(x => x.AddLine(It.IsAny<Point>(), It.IsAny<Point>(), It.IsAny<PathAlgorithm>())).
+                Throws(new Exception("Failed")).Verifiable();
             ILineService target = new LineService(mockedCanvasModel.Object);
 
             //Act

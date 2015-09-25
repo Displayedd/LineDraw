@@ -13,10 +13,10 @@ namespace LineDraw.Tests.Models
         public void WhenConstructed_InitializesValues()
         {
             //Prepare
-            Mock<ILineCalculator> mockedLineCalculator = new Mock<ILineCalculator>();
+            Mock<ILineCalculatorFactory> mockedLineCalcFactory = new Mock<ILineCalculatorFactory>();
 
             //Act
-            GraphCanvasModel target = new GraphCanvasModel(mockedLineCalculator.Object);
+            GraphCanvasModel target = new GraphCanvasModel(mockedLineCalcFactory.Object);
 
             //Verify
             Assert.IsInstanceOfType(target, typeof(ICanvasModel));
@@ -39,13 +39,18 @@ namespace LineDraw.Tests.Models
             mockedLineCalculator.Setup(x => x.CalculateLine(It.IsAny<Node[][]>(), It.IsAny<Point>(),
                 It.IsAny<Point>())).Returns(line).Verifiable();
 
-            GraphCanvasModel target = new GraphCanvasModel(mockedLineCalculator.Object);
+            Mock<ILineCalculatorFactory> mockedLineCalcFactory = new Mock<ILineCalculatorFactory>();
+            mockedLineCalcFactory.Setup(x => x.Create(It.Is<PathAlgorithm>(algo => algo == PathAlgorithm.BFS))).
+                Returns(mockedLineCalculator.Object).Verifiable();
+
+            GraphCanvasModel target = new GraphCanvasModel(mockedLineCalcFactory.Object);
 
             //Act
-            Point[] result = target.AddLine(startPoint, endPoint);
+            Point[] result = target.AddLine(startPoint, endPoint, PathAlgorithm.BFS);
 
             //Verify
             mockedLineCalculator.VerifyAll();
+            mockedLineCalcFactory.VerifyAll();
             Assert.AreEqual(result[0].X, startPoint.X);
             Assert.AreEqual(result[0].Y, startPoint.Y);
             Assert.AreEqual(result[1].X, endPoint.X);
@@ -66,14 +71,18 @@ namespace LineDraw.Tests.Models
             mockedLineCalculator.Setup(x => x.CalculateLine(It.IsAny<Node[][]>(), It.IsAny<Point>(),
                 It.IsAny<Point>())).Returns(line).Verifiable();
 
-            GraphCanvasModel target = new GraphCanvasModel(mockedLineCalculator.Object);
-            target.AddLine(startPoint, endPoint);
+            Mock<ILineCalculatorFactory> mockedLineCalcFactory = new Mock<ILineCalculatorFactory>();
+            mockedLineCalcFactory.Setup(x => x.Create(It.IsAny<PathAlgorithm>())).Returns(mockedLineCalculator.Object).Verifiable();
+
+            GraphCanvasModel target = new GraphCanvasModel(mockedLineCalcFactory.Object);
+            target.AddLine(startPoint, endPoint, PathAlgorithm.BFS);
 
             //Act
             target.ClearLines();
 
             //Verify
             mockedLineCalculator.VerifyAll();
+            mockedLineCalcFactory.VerifyAll();
             Assert.IsFalse(target.Graph[startPoint.X][startPoint.Y].Occupied);
             Assert.IsFalse(target.Graph[endPoint.X][endPoint.Y].Occupied);
         }
@@ -90,8 +99,11 @@ namespace LineDraw.Tests.Models
             mockedLineCalculator.Setup(x => x.CalculateLine(It.IsAny<Node[][]>(), It.IsAny<Point>(),
                 It.IsAny<Point>())).Returns(line).Verifiable();
 
-            GraphCanvasModel target = new GraphCanvasModel(mockedLineCalculator.Object);
-            target.AddLine(startPoint, endPoint);
+            Mock<ILineCalculatorFactory> mockedLineCalcFactory = new Mock<ILineCalculatorFactory>();
+            mockedLineCalcFactory.Setup(x => x.Create(It.IsAny<PathAlgorithm>())).Returns(mockedLineCalculator.Object).Verifiable();
+
+            GraphCanvasModel target = new GraphCanvasModel(mockedLineCalcFactory.Object);
+            target.AddLine(startPoint, endPoint, PathAlgorithm.BFS);
 
             //Act
             bool result1 = target.IsOccupied(startPoint);
@@ -100,6 +112,7 @@ namespace LineDraw.Tests.Models
 
             //Verify
             mockedLineCalculator.VerifyAll();
+            mockedLineCalcFactory.VerifyAll();
             Assert.IsTrue(result1);
             Assert.IsTrue(result2);
             Assert.IsFalse(result3);

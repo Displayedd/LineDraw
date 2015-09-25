@@ -10,7 +10,7 @@ namespace LineDraw.Interfaces
     public interface ILineService
     {
         void ClearLines();
-        LineQueryResult AddLine(Point startPoint, Point endPoint);
+        LineQueryResult AddLine(Point startPoint, Point endPoint, PathAlgorithm algorithm = PathAlgorithm.BFS);
         PointQueryResult SelectPoint(Point point);
         Size GetCanvasSize();
     }

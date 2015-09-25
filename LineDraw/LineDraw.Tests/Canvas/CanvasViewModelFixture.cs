@@ -68,7 +68,7 @@ namespace LineDraw.Tests.Models
             Mock<ILineService> mockedLineService = new Mock<ILineService>();
             mockedLineService.Setup(x => x.GetCanvasSize()).Returns(size).Verifiable();
             mockedLineService.Setup(x => x.AddLine(It.Is<Point>(y => y.X == 0 && y.Y == 0),
-                It.Is<Point>(y => y.X == 0 && y.Y == 0))).Returns(lineQueryResult).Verifiable();
+                It.Is<Point>(y => y.X == 0 && y.Y == 0), It.IsAny<PathAlgorithm>())).Returns(lineQueryResult).Verifiable();
 
             mockedLineService.Setup(x => x.SelectPoint(It.Is<Point>(y => y.X == 0 && y.Y == 0))).
                 Returns((Point y) => new PointQueryResult {Result = y, Success = true}).Verifiable();
@@ -88,6 +88,32 @@ namespace LineDraw.Tests.Models
             Assert.AreEqual(2, target.Lines[0][0].Y);
             Assert.AreEqual(3, target.Lines[0][1].X);
             Assert.AreEqual(4, target.Lines[0][1].Y);
+            mockedLineService.VerifyAll();
+        }
+
+        [TestMethod]
+        public void WhenClearLinesCommandExecuted_LinesCleared()
+        {
+            //Prepare
+            Size size = new Size { Height = 500, Width = 500 };
+            Mock<ILineService> mockedLineService = new Mock<ILineService>();
+            mockedLineService.Setup(x => x.GetCanvasSize()).Returns(size).Verifiable();
+            mockedLineService.Setup(x => x.ClearLines()).Verifiable();
+
+            CanvasViewModel target = new CanvasViewModel(mockedLineService.Object);
+            target.StartPoint = new Point();
+            target.EndPoint = new Point();
+            target.Lines.Add(new Point[] { });
+            int before = target.Lines.Count;
+
+            //Act
+            target.ClearLinesCommand.Execute(null);
+
+            //Verify
+            Assert.IsTrue(0 < before);
+            Assert.AreEqual(0, target.Lines.Count);
+            Assert.IsNull(target.StartPoint);
+            Assert.IsNull(target.EndPoint);
             mockedLineService.VerifyAll();
         }
     }

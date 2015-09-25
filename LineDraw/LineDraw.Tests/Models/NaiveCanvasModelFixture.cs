@@ -31,7 +31,7 @@ namespace LineDraw.Tests.Models
             Point endPoint = new Point { X = 1, Y = 1 };
 
             //Act
-            Point[] result = target.AddLine(startPoint, endPoint);
+            Point[] result = target.AddLine(startPoint, endPoint, PathAlgorithm.BFS);
 
             //Verify
             Assert.AreEqual(result[0].X, startPoint.X);
