@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -28,7 +29,10 @@ namespace LineDraw.Canvas
         private Point endPoint;
         private Point startPoint;
         private string errorMessage;
+        private string timeMessage;
         private PathAlgorithm pathAlgorithm;
+        private NotifyTaskCompletion<LineQueryResult> addLineTask;
+        private CancellationTokenSource cancelToken = new CancellationTokenSource();
 
         #region Properties
         /// <summary>
@@ -64,6 +68,9 @@ namespace LineDraw.Canvas
             set { SetProperty(ref this.endPoint, value); }
         }
 
+        /// <summary>
+        /// Pathfinding algorithm to use when computing lines.
+        /// </summary>
         public PathAlgorithm PathAlgorithm
         {
             get { return this.pathAlgorithm; }
@@ -78,7 +85,8 @@ namespace LineDraw.Canvas
             get
             {
                 if (selectPointCommand == null)
-                    selectPointCommand = new RelayCommand(param => SelectPoint((MouseEventArgs)param));
+                    selectPointCommand = new RelayCommand(param => SelectPoint((MouseEventArgs)param),
+                        _ => (this.AddLineTask != null && this.AddLineTask.IsCompleted) || this.AddLineTask == null);
                 return selectPointCommand;
             }
         }
@@ -97,12 +105,34 @@ namespace LineDraw.Canvas
         }
 
         /// <summary>
-        /// Field for error messages from the ILineService.
+        /// Field for error messages.
         /// </summary>
         public string ErrorMessage
         {
             get { return this.errorMessage; }
             set { SetProperty(ref this.errorMessage, value); }
+        }
+        
+        /// <summary>
+        /// Field for reporting time consumption of the line computation.
+        /// </summary>
+        public string TimeMessage
+        {
+            get { return this.timeMessage; }
+            set { SetProperty(ref this.timeMessage, value); }
+        }
+
+        /// <summary>
+        /// Get the Task wrapper for the asynchronous 
+        /// add line operation.
+        /// </summary>
+        public NotifyTaskCompletion<LineQueryResult> AddLineTask
+        {
+            get { return this.addLineTask; }
+            private set
+            {
+                SetProperty(ref this.addLineTask, value);
+            }
         }
 
         #endregion
@@ -120,6 +150,7 @@ namespace LineDraw.Canvas
             this.CanvasHeight = canvasSize.Height;
             this.CanvasWidth = canvasSize.Width;
             this.Lines = new ObservableCollection<Point[]>();
+            // Default pathfinding algorithm
             this.PathAlgorithm = PathAlgorithm.BFS;
         }
 
@@ -127,7 +158,7 @@ namespace LineDraw.Canvas
         /// Event handler for mouse click event.
         /// </summary>
         /// <param name="e"></param>
-        private void SelectPoint(MouseEventArgs e)
+        private async Task SelectPoint(MouseEventArgs e)
         {
             // Clear error message
             this.ErrorMessage = null;
@@ -160,7 +191,7 @@ namespace LineDraw.Canvas
             // Start and end point has been set, ready to compute line.
             if(StartPoint != null && EndPoint != null)
             {                
-                AddLine(StartPoint, EndPoint);
+                await AddLine(StartPoint, EndPoint);
 
                 // Reset start and end point for the next line.
                 StartPoint = null;
@@ -171,22 +202,26 @@ namespace LineDraw.Canvas
         /// <summary>
         /// Calls the ILineService with submitted points.
         /// </summary>
-        private void AddLine(Point startPoint, Point endPoint)
+        private async Task AddLine(Point startPoint, Point endPoint)
         {
             // Clear error message
             this.ErrorMessage = null;
+            this.TimeMessage = null;
 
             // Query the ILineService with selected start and end points.
-            LineQueryResult result = this.lineService.AddLine(startPoint, endPoint, PathAlgorithm);
+            this.AddLineTask = new NotifyTaskCompletion<LineQueryResult>(
+                this.lineService.AddLineAsync(startPoint, endPoint, PathAlgorithm, cancelToken.Token));
+            LineQueryResult result = await this.AddLineTask.Task;
 
             // Process the query result.
-            if (result.Success)
+            if (this.AddLineTask.IsSuccessfullyCompleted && result.Success)
             {
                 this.Lines.Add(result.Result);
+                this.TimeMessage = result.Time + " ms";
             }
             else
             {
-                this.ErrorMessage = result.Message;
+                this.ErrorMessage = result.Message;                
             }
         }
 

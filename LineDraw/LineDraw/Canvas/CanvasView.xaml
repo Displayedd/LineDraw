@@ -24,7 +24,7 @@
             <ColumnDefinition Width="150"/>
         </Grid.ColumnDefinitions>
         <Grid Grid.RowSpan="2" >
-            <!--Line container-->
+            <!--Drawn lines-->
             <ItemsControl BorderBrush="Black" 
                           BorderThickness="1"
                           Height="{Binding CanvasHeight}" 
@@ -38,7 +38,7 @@
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
-            <!--Point container-->
+            <!--Selected points-->
             <ContentControl ContentTemplate="{StaticResource PointContentDataTemplate}"
                             IsHitTestVisible="False"/>
         </Grid>
@@ -48,6 +48,12 @@
                         IsHitTestVisible="False"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"/>
+        <!--Time feedback-->
+        <TextBlock Text="{Binding TimeMessage}"
+                   Grid.Row="1"
+                   VerticalAlignment="Bottom"
+                   HorizontalAlignment="Right"
+                   IsHitTestVisible="False"/>
         <StackPanel Grid.Column="1"
                     Grid.RowSpan="2">
             <!--Path finding buttons-->

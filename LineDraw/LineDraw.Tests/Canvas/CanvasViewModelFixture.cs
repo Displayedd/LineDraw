@@ -6,6 +6,8 @@ using LineDraw.Canvas;
 using Moq;
 using System.Windows.Input;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Threading;
 
 namespace LineDraw.Tests.Models
 {
@@ -29,9 +31,82 @@ namespace LineDraw.Tests.Models
             Assert.AreEqual(size.Width, target.CanvasWidth);
             Assert.IsNull(target.StartPoint);
             Assert.IsNull(target.EndPoint);
+            Assert.IsNull(target.ErrorMessage);
+            Assert.IsNull(target.TimeMessage);
             Assert.IsInstanceOfType(target.SelectPointCommand, typeof(ICommand));
             Assert.IsInstanceOfType(target.Lines, typeof(ObservableCollection<Point[]>));
+            Assert.AreEqual(PathAlgorithm.BFS, target.PathAlgorithm);
             mockedLineService.VerifyAll();
+        }
+                
+        [TestMethod]
+        public void WhenPropertyChanged_PropertyIsUpdated()
+        {
+            //Prepare
+            Size size = new Size { Height = 500, Width = 500 };
+            Mock<ILineService> mockedLineService = new Mock<ILineService>();
+            mockedLineService.Setup(x => x.GetCanvasSize()).Returns(size).Verifiable();
+
+            CanvasViewModel target = new CanvasViewModel(mockedLineService.Object);
+
+            bool startPointChangedRaised = false;
+            target.PropertyChanged += delegate(object sender, PropertyChangedEventArgs e)
+            {
+                if (e.PropertyName == "StartPoint")
+                {
+                    startPointChangedRaised = true;
+                }
+            };
+
+            bool endPointChangedRaised = false;
+            target.PropertyChanged += delegate(object sender, PropertyChangedEventArgs e)
+            {
+                if (e.PropertyName == "EndPoint")
+                {
+                    endPointChangedRaised = true;
+                }
+            };
+
+            bool pathAlgorithmChangedRaised = false;
+            target.PropertyChanged += delegate(object sender, PropertyChangedEventArgs e)
+            {
+                if (e.PropertyName == "PathAlgorithm")
+                {
+                    pathAlgorithmChangedRaised = true;
+                }
+            };
+
+            bool errorMessageChangedRaised = false;
+            target.PropertyChanged += delegate(object sender, PropertyChangedEventArgs e)
+            {
+                if (e.PropertyName == "ErrorMessage")
+                {
+                    errorMessageChangedRaised = true;
+                }
+            };
+
+            bool timeMessageChangedRaised = false;
+            target.PropertyChanged += delegate(object sender, PropertyChangedEventArgs e)
+            {
+                if (e.PropertyName == "TimeMessage")
+                {
+                    timeMessageChangedRaised = true;
+                }
+            };
+
+            //Act
+            target.StartPoint = new Point();
+            target.EndPoint = new Point();
+            target.PathAlgorithm = PathAlgorithm.AStar;
+            target.ErrorMessage = "";
+            target.TimeMessage = "";
+
+            //Verify
+            Assert.IsTrue(startPointChangedRaised);
+            Assert.IsTrue(endPointChangedRaised);
+            Assert.IsTrue(pathAlgorithmChangedRaised);
+            Assert.IsTrue(errorMessageChangedRaised);
+            Assert.IsTrue(timeMessageChangedRaised);
         }
 
         [TestMethod]
@@ -67,11 +142,14 @@ namespace LineDraw.Tests.Models
 
             Mock<ILineService> mockedLineService = new Mock<ILineService>();
             mockedLineService.Setup(x => x.GetCanvasSize()).Returns(size).Verifiable();
-            mockedLineService.Setup(x => x.AddLine(It.Is<Point>(y => y.X == 0 && y.Y == 0),
-                It.Is<Point>(y => y.X == 0 && y.Y == 0), It.IsAny<PathAlgorithm>())).Returns(lineQueryResult).Verifiable();
+            mockedLineService.Setup(x => x.AddLineAsync(
+                It.Is<Point>(y => y.X == 0 && y.Y == 0),
+                It.Is<Point>(y => y.X == 0 && y.Y == 0), 
+                It.IsAny<PathAlgorithm>(), 
+                It.IsAny<CancellationToken>())).ReturnsAsync(lineQueryResult).Verifiable();
 
             mockedLineService.Setup(x => x.SelectPoint(It.Is<Point>(y => y.X == 0 && y.Y == 0))).
-                Returns((Point y) => new PointQueryResult {Result = y, Success = true}).Verifiable();
+                Returns((Point y) => new PointQueryResult { Result = y, Success = true }).Verifiable();
 
             CanvasViewModel target = new CanvasViewModel(mockedLineService.Object);
 

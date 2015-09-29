@@ -35,9 +35,9 @@
                  Width="4">
                 <Ellipse.RenderTransform>
                     <TransformGroup>
-                        <TranslateTransform X="{Binding DataContext.StartPoint.X,
+                        <TranslateTransform X="{Binding DataContext.EndPoint.X,
                 RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" 
-                                        Y="{Binding DataContext.StartPoint.Y,
+                                        Y="{Binding DataContext.EndPoint.Y,
                 RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
                         <TranslateTransform X="-2" Y="-2"/>
                     </TransformGroup>

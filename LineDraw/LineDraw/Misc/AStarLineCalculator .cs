@@ -30,8 +30,7 @@ namespace LineDraw.Misc
         {
             bool found = false;
 
-            Stopwatch timer = new Stopwatch(); // DEBUG code
-            
+            Stopwatch timer = new Stopwatch(); // DEBUG code            
 
             // This implementation requires the nodes to be PriorityQueueNodes.
             PriorityQueueNode[][] prioGraph = graph as PriorityQueueNode[][];
@@ -52,7 +51,6 @@ namespace LineDraw.Misc
             timer.Start(); // DEBUG code
             while(!queue.IsEmpty)
             {
-
                 count++; // DEBUG code
 
                 // Fetch node with least distance

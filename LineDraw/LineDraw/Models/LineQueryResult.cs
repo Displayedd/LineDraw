@@ -23,5 +23,10 @@ namespace LineDraw.Models
         /// Error message if line was not computed.
         /// </summary>
         public string Message { get; set; }
+
+        /// <summary>
+        /// Amount of time in milliseconds the line computation consumed.
+        /// </summary>
+        public double Time { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using LineDraw.Interfaces;
 using LineDraw.Models;
 using LineDraw.Services;
 using Moq;
+using System.Threading.Tasks;
 
 namespace LineDraw.Tests.Models
 {
@@ -46,7 +47,7 @@ namespace LineDraw.Tests.Models
             Assert.AreEqual(startPoint.X, result.Result[0].X);
             Assert.AreEqual(startPoint.Y, result.Result[0].Y);
             Assert.AreEqual(endPoint.X, result.Result[1].X);
-            Assert.AreEqual(endPoint.Y, result.Result[1].Y);
+            Assert.AreEqual(endPoint.Y, result.Result[1].Y);            
         }
 
         [TestMethod]
@@ -139,6 +140,55 @@ namespace LineDraw.Tests.Models
             mockedCanvasModel.VerifyAll();
             Assert.IsFalse(result.Success);
             Assert.IsNotNull(result.Message);
+        }
+
+        [TestMethod]
+        public async Task WhenAddLineAsyncCalled_QuerySuccessfull()
+        {
+            //Prepare
+            Point startPoint = new Point { X = 1, Y = 1 };
+            Point endPoint = new Point { X = 2, Y = 2 };
+            Point[] mockedResult = new Point[] { startPoint, endPoint };
+
+            Mock<ICanvasModel> mockedCanvasModel = new Mock<ICanvasModel>();
+            mockedCanvasModel.Setup(x => x.AddLine(It.IsAny<Point>(), It.IsAny<Point>(),
+                It.Is<PathAlgorithm>(algo => algo == PathAlgorithm.BFS))).Returns(mockedResult).Verifiable();
+
+            ILineService target = new LineService(mockedCanvasModel.Object);
+
+            //Act
+            LineQueryResult result = await target.AddLineAsync(startPoint, endPoint);
+
+            //Verify
+            mockedCanvasModel.VerifyAll();
+            Assert.AreEqual(true, result.Success);
+            Assert.AreEqual(startPoint.X, result.Result[0].X);
+            Assert.AreEqual(startPoint.Y, result.Result[0].Y);
+            Assert.AreEqual(endPoint.X, result.Result[1].X);
+            Assert.AreEqual(endPoint.Y, result.Result[1].Y);
+        }
+
+
+        [TestMethod]
+        public async Task WhenAddLineAsyncCalled_QueryUnsuccessfull()
+        {
+            //Prepare
+            Point startPoint = new Point { X = 1, Y = 1 };
+            Point endPoint = new Point { X = 2, Y = 2 };
+            Point[] mockedResult = new Point[] { startPoint, endPoint };
+
+            Mock<ICanvasModel> mockedCanvasModel = new Mock<ICanvasModel>();
+            mockedCanvasModel.Setup(x => x.AddLine(It.IsAny<Point>(), It.IsAny<Point>(), It.IsAny<PathAlgorithm>())).
+                Throws(new Exception("Failed")).Verifiable();
+            ILineService target = new LineService(mockedCanvasModel.Object);
+
+            //Act
+            LineQueryResult result = await target.AddLineAsync(startPoint, endPoint);
+
+            //Verify
+            mockedCanvasModel.VerifyAll();
+            Assert.AreEqual(false, result.Success);
+            Assert.IsFalse(string.IsNullOrEmpty(result.Message));
         }
     }
 }

@@ -76,8 +76,12 @@
     </ApplicationDefinition>
     <Compile Include="Converters\EnumToBooleanConverter.cs" />
     <Compile Include="Converters\PointsConverter.cs" />
+    <Compile Include="External\AsyncCommand.cs" />
+    <Compile Include="External\AsyncCommandBase.cs" />
     <Compile Include="External\MouseBehaviour.cs" />
+    <Compile Include="External\NotifyTaskCompletion.cs" />
     <Compile Include="External\RelayCommand.cs" />
+    <Compile Include="Interfaces\IAsyncCommand.cs" />
     <Compile Include="Interfaces\ICanvasModel.cs" />
     <Compile Include="Interfaces\ILineCalculator.cs" />
     <Compile Include="Interfaces\ILineCalculatorFactory.cs" />

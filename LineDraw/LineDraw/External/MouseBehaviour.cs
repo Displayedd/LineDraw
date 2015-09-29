@@ -32,8 +32,9 @@ namespace LineDraw.External
             FrameworkElement element = (FrameworkElement)sender;
 
             ICommand command = GetMouseUpCommand(element);
-
-            command.Execute(e);
+            
+            if(command.CanExecute(sender))            
+                command.Execute(e);
         }
 
         public static void SetMouseUpCommand(UIElement element, ICommand value)
