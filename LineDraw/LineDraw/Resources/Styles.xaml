@@ -2,46 +2,108 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:conv="clr-namespace:LineDraw.Converters"
                     xmlns:mod="clr-namespace:LineDraw.Models">
+    <!-- Brushes -->
+    <Color x:Key="DisplayForegroundColor">#FF9BCA26</Color>
+    <Color x:Key="DisplayForegroundGlowColor">#FFDEFB90</Color>
+    <RadialGradientBrush x:Key="DisplayBackgroundBrush" RadiusX="0.65" RadiusY="0.7" Center="0.5,0.5" GradientOrigin="0.5,0.5">
+        <RadialGradientBrush.GradientStops>
+            <GradientStop Color="#FF003F00" Offset="0.306977"/>
+            <GradientStop Color="#FF003200" Offset="0.549037"/>
+            <GradientStop Color="#FF002600" Offset="0.818605"/>
+            <GradientStop Color="#FF001900" Offset="1"/>
+        </RadialGradientBrush.GradientStops>
+    </RadialGradientBrush>
+    <SolidColorBrush x:Key="DisplayForegroundBrush" Color="{StaticResource DisplayForegroundColor}" />
+    <SolidColorBrush x:Key="DisplayForegroundGlowBrush" Color="{StaticResource DisplayForegroundGlowColor}" />
+    <LinearGradientBrush x:Key="MainBackgroundBorderBrush" EndPoint="0,0" StartPoint="1,1">
+        <GradientStop Color="#FFC8CDD7"/>
+        <GradientStop Color="#FF747C8D" Offset="0.5"/>
+        <GradientStop Color="#FF464646" Offset="0.5"/>
+        <GradientStop Color="#FF191919" Offset="1"/>
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="MainBackgroundBrush" StartPoint="0.5,0.0" EndPoint="0.5,1">
+        <LinearGradientBrush.GradientStops>
+            <GradientStop Color="#FF262D26" Offset="0.25431"/>
+            <GradientStop Color="#FF434943" Offset="0.467381"/>
+            <GradientStop Color="#FF616561" Offset="0.508621"/>
+            <GradientStop Color="#FFA4A6A4" Offset="0.549261"/>
+            <GradientStop Color="#FFE7E7E7" Offset="0.560345"/>
+            <GradientStop Color="#FFABADAB" Offset="0.571552"/>
+            <GradientStop Color="#FF707470" Offset="0.616379"/>
+            <GradientStop Color="#FF4B504B" Offset="0.646329"/>
+            <GradientStop Color="#FF262D26" Offset="0.75"/>
+        </LinearGradientBrush.GradientStops>
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="MainForegroundBrush" Color="White" />
+
+    <!-- Converters -->
     <conv:PointsConverter x:Key="PointsConverter" />
     <conv:EnumToBooleanConverter x:Key="EnumToBoolConverter" />
 
+    <!-- TextBlock style with shadow-->
+    <Style x:Key="ShadowedTextBlockStyle" TargetType="TextBlock">
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect Color="Black"
+                                          BlurRadius="2" 
+                                          ShadowDepth="0" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
     <!-- Data template for lines -->
     <DataTemplate x:Key="LineItemDataTemplate">
-        <Polyline Stroke="Black" 
-                   StrokeThickness="1" 
-                   Points="{Binding Mode=OneWay, Converter={StaticResource PointsConverter}}"/>
+        <Polyline Stroke="{StaticResource DisplayForegroundBrush}"                  
+                  StrokeThickness="1" 
+                  Points="{Binding Mode=OneWay, Converter={StaticResource PointsConverter}}">
+            <Polyline.Effect>
+                <DropShadowEffect Color="{StaticResource DisplayForegroundGlowColor}"
+                                  BlurRadius="5" 
+                                  ShadowDepth="0" />
+            </Polyline.Effect>
+        </Polyline>
     </DataTemplate>
 
     <!-- Data template for start and end point -->
     <DataTemplate x:Key="PointContentDataTemplate">
         <Canvas>
             <Ellipse Name="StartPoint"
-                 Fill="Blue"
-                 Height="4"
-                 Width="4">
+                     Fill="{StaticResource DisplayForegroundBrush}"
+                     Height="4"
+                     Width="4">
                 <Ellipse.RenderTransform>
                     <TransformGroup>
-                    <TranslateTransform X="{Binding DataContext.StartPoint.X,
+                        <TranslateTransform X="{Binding DataContext.StartPoint.X, Mode=OneWay,
                 RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" 
-                                        Y="{Binding DataContext.StartPoint.Y,
+                                        Y="{Binding DataContext.StartPoint.Y, Mode=OneWay,
                 RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
                         <TranslateTransform X="-2" Y="-2"/>
                     </TransformGroup>
                 </Ellipse.RenderTransform>
+                <Ellipse.Effect>
+                    <DropShadowEffect Color="{StaticResource DisplayForegroundGlowColor}"
+                                  BlurRadius="5" 
+                                  ShadowDepth="0" />
+                </Ellipse.Effect>
             </Ellipse>
             <Ellipse Name="EndPoint"
-                 Fill="Blue"
+                 Fill="{StaticResource DisplayForegroundBrush}"
                  Height="4"
                  Width="4">
                 <Ellipse.RenderTransform>
                     <TransformGroup>
-                        <TranslateTransform X="{Binding DataContext.EndPoint.X,
+                        <TranslateTransform X="{Binding DataContext.EndPoint.X, Mode=OneWay,
                 RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" 
-                                        Y="{Binding DataContext.EndPoint.Y,
+                                        Y="{Binding DataContext.EndPoint.Y, Mode=OneWay,
                 RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}" />
                         <TranslateTransform X="-2" Y="-2"/>
                     </TransformGroup>
                 </Ellipse.RenderTransform>
+                <Ellipse.Effect>
+                    <DropShadowEffect Color="{StaticResource DisplayForegroundGlowColor}"
+                                  BlurRadius="5" 
+                                  ShadowDepth="0" />
+                </Ellipse.Effect>
             </Ellipse>
         </Canvas>
         <DataTemplate.Triggers>
@@ -65,22 +127,31 @@
 
     <!-- Data template pathfinding algorithm-->
     <DataTemplate x:Key="PathAlgorithmDataTemplate">
-        <StackPanel Orientation="Horizontal">
-            <RadioButton Content="A*"
+        <StackPanel Orientation="Horizontal" SnapsToDevicePixels="False">
+            <RadioButton Foreground="{StaticResource MainForegroundBrush}"
                          IsChecked="{Binding Path=DataContext.PathAlgorithm,
                 RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}},
                 Converter={StaticResource EnumToBoolConverter}, 
-                ConverterParameter={x:Static mod:PathAlgorithm.AStar}}" />
-            <RadioButton Content="BFS" 
+                ConverterParameter={x:Static mod:PathAlgorithm.AStar}}">
+                <TextBlock Text="A*"
+                           Style="{StaticResource ShadowedTextBlockStyle}" />
+            </RadioButton>
+            <RadioButton Foreground="{StaticResource MainForegroundBrush}"
                          IsChecked="{Binding Path=DataContext.PathAlgorithm,
                 RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}},
                 Converter={StaticResource EnumToBoolConverter}, 
-                ConverterParameter={x:Static mod:PathAlgorithm.BFS}}" />
-            <RadioButton Content="Dijkstra's"
+                ConverterParameter={x:Static mod:PathAlgorithm.BFS}}">
+                <TextBlock Text="BFS"
+                           Style="{StaticResource ShadowedTextBlockStyle}" />
+            </RadioButton>
+            <RadioButton Foreground="{StaticResource MainForegroundBrush}"
                          IsChecked="{Binding Path=DataContext.PathAlgorithm,
                 RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}},
                 Converter={StaticResource EnumToBoolConverter}, 
-                ConverterParameter={x:Static mod:PathAlgorithm.Dijkstra}}" />
+                ConverterParameter={x:Static mod:PathAlgorithm.Dijkstra}}">
+                <TextBlock Text="Dijkstra's"
+                           Style="{StaticResource ShadowedTextBlockStyle}" />
+            </RadioButton>
         </StackPanel>
     </DataTemplate>
 </ResourceDictionary>

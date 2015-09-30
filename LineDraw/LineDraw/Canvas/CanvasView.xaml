@@ -4,8 +4,7 @@
         xmlns:ext="clr-namespace:LineDraw.External"
         Title="Line draw" 
         ResizeMode="NoResize" 
-        SizeToContent="WidthAndHeight"
-        >
+        SizeToContent="WidthAndHeight">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -14,56 +13,62 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
-            <RowDefinition />
-        </Grid.RowDefinitions>        
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition Width="150"/>
-        </Grid.ColumnDefinitions>
-        <Grid Grid.RowSpan="2" >
-            <!--Drawn lines-->
-            <ItemsControl BorderBrush="Black" 
-                          BorderThickness="1"
-                          Height="{Binding CanvasHeight}" 
+    <Border Background="{StaticResource MainBackgroundBrush}"
+            Padding="10">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="150"/>
+            </Grid.ColumnDefinitions>
+            <!--Main display area-->
+            <Grid Grid.RowSpan="2">
+                <!-- Lines-->
+                <ItemsControl Height="{Binding CanvasHeight}" 
                           Width="{Binding CanvasWidth}" 
                           ItemsSource="{Binding Lines}"
                           ItemTemplate="{StaticResource LineItemDataTemplate}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <Canvas Background="White"
-                           ext:MouseBehaviour.MouseUpCommand="{Binding SelectPointCommand}" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
-            <!--Selected points-->
-            <ContentControl ContentTemplate="{StaticResource PointContentDataTemplate}"
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas Background="{StaticResource DisplayBackgroundBrush}" 
+                                        ext:MouseBehaviour.MouseUpCommand="{Binding SelectPointCommand}" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+                <!--Selected points-->
+                <ContentControl ContentTemplate="{StaticResource PointContentDataTemplate}"
                             IsHitTestVisible="False"/>
-        </Grid>
-        <!-- Error feedback-->
-        <ContentControl Content="{Binding ErrorMessage}"
+            </Grid>
+            <Border Grid.RowSpan="2" 
+                    BorderThickness="2"
+                    BorderBrush="{StaticResource MainBackgroundBorderBrush}" />
+            
+            <!-- Error feedback-->
+            <ContentControl Content="{Binding ErrorMessage}"
                         ContentTemplate="{StaticResource ErrorMessageDataTemplate}"
                         IsHitTestVisible="False"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"/>
-        <!--Time feedback-->
-        <TextBlock Text="{Binding TimeMessage}"
+            <!--Time feedback-->
+            <TextBlock Text="{Binding TimeMessage}"
                    Grid.Row="1"
                    VerticalAlignment="Bottom"
                    HorizontalAlignment="Right"
                    IsHitTestVisible="False"/>
-        <StackPanel Grid.Column="1"
+            <StackPanel Grid.Column="1"
                     Grid.RowSpan="2">
-            <!--Path finding buttons-->
-            <ContentControl ContentTemplate="{StaticResource PathAlgorithmDataTemplate}"
+                <!--Path finding buttons-->
+                <ContentControl ContentTemplate="{StaticResource PathAlgorithmDataTemplate}"
                             HorizontalAlignment="Center"
                             />
-            <!--Reset button -->
-            <Button Command="{Binding ClearLinesCommand}"
+                <!--Reset button -->
+                <Button Command="{Binding ClearLinesCommand}"
                     Content="Reset"
                     VerticalAlignment="Bottom"/>
-        </StackPanel>
-    </Grid>
+            </StackPanel>
+        </Grid>
+    </Border>
 </Window>

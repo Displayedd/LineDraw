@@ -147,8 +147,8 @@ namespace LineDraw.Canvas
                 new ArgumentNullException("lineService");
             this.lineService = lineService;
             Size canvasSize = this.lineService.GetCanvasSize();
-            this.CanvasHeight = canvasSize.Height;
-            this.CanvasWidth = canvasSize.Width;
+            this.CanvasHeight = canvasSize.Height - 1;
+            this.CanvasWidth = canvasSize.Width - 1;
             this.Lines = new ObservableCollection<Point[]>();
             // Default pathfinding algorithm
             this.PathAlgorithm = PathAlgorithm.BFS;
