@@ -81,6 +81,7 @@
     <Compile Include="External\MouseBehaviour.cs" />
     <Compile Include="External\NotifyTaskCompletion.cs" />
     <Compile Include="External\RelayCommand.cs" />
+    <Compile Include="External\StateManager.cs" />
     <Compile Include="Interfaces\IAsyncCommand.cs" />
     <Compile Include="Interfaces\ICanvasModel.cs" />
     <Compile Include="Interfaces\ILineCalculator.cs" />
@@ -91,6 +92,7 @@
     <Compile Include="Misc\DirectedDistanceComparer.cs" />
     <Compile Include="Misc\DistanceComparer.cs" />
     <Compile Include="Misc\GraphTools.cs" />
+    <Compile Include="Models\CanvasState.cs" />
     <Compile Include="Models\PathAlgorithm.cs" />
     <Compile Include="Models\PointQueryResult.cs" />
     <Compile Include="Models\NaiveCanvasModel.cs" />
@@ -145,11 +147,14 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <Resource Include="Resources\digital-7.ttf" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\MainDisplayGrid.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

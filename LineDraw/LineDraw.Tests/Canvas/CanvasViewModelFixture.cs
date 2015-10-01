@@ -27,12 +27,13 @@ namespace LineDraw.Tests.Models
 
             //Verify
             Assert.IsInstanceOfType(target, typeof(CanvasViewModel));
-            Assert.AreEqual(size.Height, target.CanvasHeight);
-            Assert.AreEqual(size.Width, target.CanvasWidth);
+            Assert.AreEqual(size.Height - 1, target.CanvasHeight);
+            Assert.AreEqual(size.Width - 1, target.CanvasWidth);
             Assert.IsNull(target.StartPoint);
             Assert.IsNull(target.EndPoint);
             Assert.IsNull(target.ErrorMessage);
             Assert.IsNull(target.TimeMessage);
+            Assert.AreEqual(CanvasState.ReadyState, target.State);
             Assert.IsInstanceOfType(target.SelectPointCommand, typeof(ICommand));
             Assert.IsInstanceOfType(target.Lines, typeof(ObservableCollection<Point[]>));
             Assert.AreEqual(PathAlgorithm.BFS, target.PathAlgorithm);
@@ -94,12 +95,22 @@ namespace LineDraw.Tests.Models
                 }
             };
 
+            bool stateChangedRaised = false;
+            target.PropertyChanged += delegate(object sender, PropertyChangedEventArgs e)
+            {
+                if (e.PropertyName == "State")
+                {
+                    stateChangedRaised = true;
+                }
+            };
+
             //Act
             target.StartPoint = new Point();
             target.EndPoint = new Point();
             target.PathAlgorithm = PathAlgorithm.AStar;
             target.ErrorMessage = "";
             target.TimeMessage = "";
+            target.State = CanvasState.BusyState;
 
             //Verify
             Assert.IsTrue(startPointChangedRaised);
@@ -107,6 +118,7 @@ namespace LineDraw.Tests.Models
             Assert.IsTrue(pathAlgorithmChangedRaised);
             Assert.IsTrue(errorMessageChangedRaised);
             Assert.IsTrue(timeMessageChangedRaised);
+            Assert.IsTrue(stateChangedRaised);
         }
 
         [TestMethod]
@@ -183,16 +195,19 @@ namespace LineDraw.Tests.Models
             target.EndPoint = new Point();
             target.Lines.Add(new Point[] { });
             int before = target.Lines.Count;
+            target.State = CanvasState.BusyState;
 
             //Act
             target.ClearLinesCommand.Execute(null);
 
             //Verify
+            mockedLineService.VerifyAll();
             Assert.IsTrue(0 < before);
             Assert.AreEqual(0, target.Lines.Count);
             Assert.IsNull(target.StartPoint);
             Assert.IsNull(target.EndPoint);
-            mockedLineService.VerifyAll();
+            Assert.AreEqual(CanvasState.ReadyState, target.State);
+
         }
     }
 }

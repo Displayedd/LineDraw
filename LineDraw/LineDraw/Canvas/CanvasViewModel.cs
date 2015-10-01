@@ -30,6 +30,7 @@ namespace LineDraw.Canvas
         private Point startPoint;
         private string errorMessage;
         private string timeMessage;
+        private string state = CanvasState.ReadyState;
         private PathAlgorithm pathAlgorithm;
         private NotifyTaskCompletion<LineQueryResult> addLineTask;
         private CancellationTokenSource cancelToken = new CancellationTokenSource();
@@ -123,6 +124,15 @@ namespace LineDraw.Canvas
         }
 
         /// <summary>
+        /// Field for reporting the state of the canvas; Busy, Error, Ready.
+        /// </summary>
+        public string State
+        {
+            get { return this.state; }
+            set { SetProperty(ref this.state, value); }
+        }
+
+        /// <summary>
         /// Get the Task wrapper for the asynchronous 
         /// add line operation.
         /// </summary>
@@ -205,8 +215,9 @@ namespace LineDraw.Canvas
         private async Task AddLine(Point startPoint, Point endPoint)
         {
             // Clear error message
+            this.State = CanvasState.BusyState;
             this.ErrorMessage = null;
-            this.TimeMessage = null;
+            this.TimeMessage = null;            
 
             // Query the ILineService with selected start and end points.
             this.AddLineTask = new NotifyTaskCompletion<LineQueryResult>(
@@ -217,11 +228,13 @@ namespace LineDraw.Canvas
             if (this.AddLineTask.IsSuccessfullyCompleted && result.Success)
             {
                 this.Lines.Add(result.Result);
-                this.TimeMessage = result.Time + " ms";
+                this.TimeMessage = result.Time + " MS";
+                this.State = CanvasState.ReadyState;
             }
             else
             {
-                this.ErrorMessage = result.Message;                
+                this.ErrorMessage = result.Message;
+                this.State = CanvasState.ErrorState;
             }
         }
 
@@ -237,6 +250,7 @@ namespace LineDraw.Canvas
             // Clear points
             this.StartPoint = null;
             this.EndPoint = null;
+            this.State = CanvasState.ReadyState;
         }
     }
 }

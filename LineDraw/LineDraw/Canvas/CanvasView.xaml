@@ -17,49 +17,52 @@
             Padding="10">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="30"/>
+                <RowDefinition Height="150"/>
                 <RowDefinition />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition Width="150"/>
             </Grid.ColumnDefinitions>
-            <!--Main display area-->
-            <Grid Grid.RowSpan="2">
-                <!-- Lines-->
-                <ItemsControl Height="{Binding CanvasHeight}" 
+            <!-- Message display-->
+            <ContentControl Content="{Binding}"
+                            ContentTemplate="{StaticResource MessageDisplayDataTemplate}"
+                            HorizontalAlignment="Left"/>
+            <!--Main display-->
+            <Border Grid.ColumnSpan="2"
+                    Grid.Row="1"
+                    Margin="0,10,0,0"
+                    Style="{StaticResource DisplayBorderStyle}">
+                <Grid>
+                    <!-- Lines-->
+                    <ItemsControl Height="{Binding CanvasHeight}" 
                           Width="{Binding CanvasWidth}" 
                           ItemsSource="{Binding Lines}"
                           ItemTemplate="{StaticResource LineItemDataTemplate}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <Canvas Background="{StaticResource DisplayBackgroundBrush}" 
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <Canvas Background="{StaticResource DisplayBackgroundBrush}" 
                                         ext:MouseBehaviour.MouseUpCommand="{Binding SelectPointCommand}" />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
-                <!--Selected points-->
-                <ContentControl ContentTemplate="{StaticResource PointContentDataTemplate}"
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                    <!--Selected points-->
+                    <ContentControl ContentTemplate="{StaticResource PointContentDataTemplate}"
                             IsHitTestVisible="False"/>
-            </Grid>
-            <Border Grid.RowSpan="2" 
-                    BorderThickness="2"
-                    BorderBrush="{StaticResource MainBackgroundBorderBrush}" />
-            
-            <!-- Error feedback-->
-            <ContentControl Content="{Binding ErrorMessage}"
-                        ContentTemplate="{StaticResource ErrorMessageDataTemplate}"
-                        IsHitTestVisible="False"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"/>
-            <!--Time feedback-->
-            <TextBlock Text="{Binding TimeMessage}"
-                   Grid.Row="1"
-                   VerticalAlignment="Bottom"
-                   HorizontalAlignment="Right"
-                   IsHitTestVisible="False"/>
-            <StackPanel Grid.Column="1"
-                    Grid.RowSpan="2">
+                    <!--Display grid-->
+                    <Border IsHitTestVisible="False">
+                        <Border.Background>
+                            <VisualBrush TileMode="Tile" Viewport="0,0,0.1,0.1">
+                                <VisualBrush.Visual>
+                                    <Image Source="pack://application:,,,/LineDraw;component/Resources/MainDisplayGrid.png" />
+                                </VisualBrush.Visual>
+                            </VisualBrush>
+                        </Border.Background>
+                    </Border>
+                </Grid>
+            </Border>
+            <!-- Push buttons -->
+            <StackPanel Grid.Column="1">
                 <!--Path finding buttons-->
                 <ContentControl ContentTemplate="{StaticResource PathAlgorithmDataTemplate}"
                             HorizontalAlignment="Center"
