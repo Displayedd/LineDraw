@@ -1,0 +1,181 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:CustomControlWPF" >
+    <!--  Button style -->
+    <Style TargetType="{x:Type Button}" x:Key="WindowButtonStyle">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ButtonBase}">
+                    <Border
+                            x:Name="Chrome"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            Margin="0"
+                            Background="{TemplateBinding Background}"
+                            SnapsToDevicePixels="True">
+                        <ContentPresenter
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                Content="{TemplateBinding Content}"
+                                ContentStringFormat="{TemplateBinding ContentStringFormat}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                Margin="{TemplateBinding Padding}"
+                                RecognizesAccessKey="True"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="FontFamily" Value="Webdings"/>
+        <Setter Property="FontSize" Value="13.333" />
+        <Setter Property="Foreground" Value="Gray" />
+        <Setter Property="Margin" Value="0,2,3,0"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="White" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <BlurEffect x:Key="BorderEffect" Radius="7" KernelType="Gaussian" />
+    <DropShadowEffect x:Key="BorderShadowEffect" BlurRadius="7" Color="Black" ShadowDepth="0"/>
+    <DropShadowEffect x:Key="BorderShadowEffect2" BlurRadius="15" Color="Black" ShadowDepth="2"/>
+
+    <!-- Window style -->
+    <Style TargetType="{x:Type local:CustomWindow}">
+        <Setter Property="WindowStyle" Value="None"/>
+        <Setter Property="ResizeMode" Value="CanResize"/>
+        <Setter Property="AllowsTransparency" Value="True" />
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="Black"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:CustomWindow}">
+                    <Grid Margin="0" x:Name="outerBoundingBox">
+
+                        <Border Margin="8" x:Name="outerBorder"  BorderThickness="{TemplateBinding BorderThickness}" 
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                Effect="{StaticResource BorderShadowEffect}"/>
+                        <Border Margin="8" x:Name="outerBorder2"  BorderThickness="{TemplateBinding BorderThickness}" 
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                Effect="{StaticResource BorderShadowEffect2}"/>
+                        <!--   <Border Margin="8" x:Name="outerBorder"  BorderThickness="{TemplateBinding BorderThickness}" 
+                                BorderBrush="{TemplateBinding BorderBrush}"/>
+                        <Border Margin="8" x:Name="outerBorder2"  BorderThickness="{TemplateBinding BorderThickness}" 
+                                BorderBrush="{TemplateBinding BorderBrush}"/>-->
+                        <Grid Margin="9" x:Name="innerBoundingBox">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid Background="{TemplateBinding Background}"
+                                           Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2">
+                                    <AdornerDecorator>
+                                        <ContentPresenter/>
+                                    </AdornerDecorator>
+                                </Grid>
+                                <Rectangle x:Name="moveRectangle" Fill="Transparent"
+                                           Grid.Row="0" Grid.Column="0"/>
+                                <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+                                    <Button x:Name="minimizeButton" Style="{StaticResource WindowButtonStyle}"
+                                            Content="0" />
+                                    <Button x:Name="restoreButton" Style="{StaticResource WindowButtonStyle}"
+                                            Content="1" />
+                                    <Button x:Name="closeButton" Style="{StaticResource WindowButtonStyle}"
+                                            Content="r" />
+                                </StackPanel>
+                            </Grid>
+                            <!-- Resize grid to be inserted here -->
+                            <Grid x:Name="resizeGrid">
+                                <Rectangle
+                                    Stroke="{x:Null}"
+                                    Fill="Transparent"
+                                    VerticalAlignment="Top"
+                                    Height="5"
+                                    x:Name="top"
+                                    Margin="5,0,5,0" />
+                                <Rectangle
+                                    Stroke="{x:Null}"
+                                    Fill="Transparent"
+                                    x:Name="bottom"
+                                    Height="5"
+                                    VerticalAlignment="Bottom"
+                                    Margin="5,0,5,0" />
+                                <Rectangle
+                                    Stroke="{x:Null}"
+                                    Fill="Transparent"
+                                    HorizontalAlignment="Left"
+                                    Margin="0,5,0,5"
+                                    Width="5"
+                                    x:Name="left"/>
+                                <Rectangle
+                                    Stroke="{x:Null}"
+                                    Fill="Transparent"
+                                    Margin="0,5,0,5"
+                                    Width="5"
+                                    HorizontalAlignment="Right"
+                                    x:Name="right" />
+                                <Rectangle
+                                    Stroke="{x:Null}"
+                                    Fill="Transparent"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Bottom"
+                                    Width="5"
+                                    Height="5"
+                                    x:Name="bottomLeft" />
+                                <Rectangle
+                                    Stroke="{x:Null}"
+                                    Fill="Transparent"
+                                    VerticalAlignment="Bottom"
+                                    Height="5"
+                                    Width="5"
+                                    HorizontalAlignment="Right"
+                                    x:Name="bottomRight" />
+                                <Rectangle
+                                    Stroke="{x:Null}"
+                                    Fill="Transparent"
+                                    HorizontalAlignment="Right"
+                                    Width="5"
+                                    Height="5"
+                                    VerticalAlignment="Top"
+                                    x:Name="topRight" />
+                                <Rectangle
+                                    Stroke="{x:Null}"
+                                    Fill="Transparent"
+                                    HorizontalAlignment="Left"
+                                    Width="6"
+                                    VerticalAlignment="Top"
+                                    Height="5"
+                                    x:Name="topLeft" />
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="WindowState" Value="Maximized" >
+                            <Setter TargetName="restoreButton" Property="Content" Value="2" />
+                            <Setter TargetName="innerBoundingBox" Property="Margin" Value="0" />
+                            <Setter TargetName="resizeGrid" Property="Visibility" Value="Hidden" />
+                        </Trigger>
+                        <Trigger Property="IsActive" Value="false">
+                            <Setter TargetName="outerBorder2" Property="Visibility" Value="Hidden" />
+                        </Trigger>
+                        <Trigger Property="ResizeMode" Value="CanMinimize">
+                            <Setter TargetName="resizeGrid" Property="Visibility" Value="Hidden" />
+                            <Setter TargetName="restoreButton" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                        <Trigger Property="ResizeMode" Value="NoResize">
+                            <Setter TargetName="resizeGrid" Property="Visibility" Value="Hidden" />
+                            <Setter TargetName="minimizeButton" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="restoreButton" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

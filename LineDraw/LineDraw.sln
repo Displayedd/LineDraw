@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LineDraw", "LineDraw\LineDr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LineDraw.Tests", "LineDraw.Tests\LineDraw.Tests.csproj", "{1B74EB41-0E8B-4055-A5DB-3D5A5B40A3CE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomWindow", "CustomWindow\CustomWindow.csproj", "{0C55FF8F-7E77-4792-92E9-C9CCA000BAC8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{1B74EB41-0E8B-4055-A5DB-3D5A5B40A3CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B74EB41-0E8B-4055-A5DB-3D5A5B40A3CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B74EB41-0E8B-4055-A5DB-3D5A5B40A3CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C55FF8F-7E77-4792-92E9-C9CCA000BAC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C55FF8F-7E77-4792-92E9-C9CCA000BAC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C55FF8F-7E77-4792-92E9-C9CCA000BAC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C55FF8F-7E77-4792-92E9-C9CCA000BAC8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

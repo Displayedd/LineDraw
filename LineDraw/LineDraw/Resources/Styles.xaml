@@ -3,9 +3,13 @@
                     xmlns:conv="clr-namespace:LineDraw.Converters"
                     xmlns:mod="clr-namespace:LineDraw.Models"
                     xmlns:ext="clr-namespace:LineDraw.External">
-    <!-- Brushes -->
+
+    <!-- Colors -->
     <Color x:Key="DisplayForegroundColor">#FF9BCA26</Color>
     <Color x:Key="DisplayForegroundGlowColor">#FFDEFB90</Color>
+    <Color x:Key="DisplayErrorColor">#FFFF642C</Color>
+    <Color x:Key="DisplayBusyColor">#FFFFF300</Color>
+    <!-- Brushes -->
     <RadialGradientBrush x:Key="DisplayBackgroundBrush" RadiusX="0.65" RadiusY="0.8" Center="0.5,0.5" GradientOrigin="0.5,0.5">
         <RadialGradientBrush.GradientStops>
             <GradientStop Color="#FF003F00" Offset="0.306977"/>
@@ -36,6 +40,28 @@
         </LinearGradientBrush.GradientStops>
     </LinearGradientBrush>
     <SolidColorBrush x:Key="MainForegroundBrush" Color="White" />
+    <RadialGradientBrush x:Key="ButtonBackgroundBrush" RadiusX="0.50" RadiusY="0.50" Center="0.46,0.36" GradientOrigin="0.40,0.36">
+        <RadialGradientBrush.GradientStops>
+            <GradientStop Color="#FFFFFFFF" Offset="0"/>
+            <GradientStop Color="#FFB5B5B5" Offset="0.39"/>
+            <GradientStop Color="#FF6C6B6B" Offset="1"/>
+        </RadialGradientBrush.GradientStops>
+    </RadialGradientBrush>
+    <RadialGradientBrush x:Key="ButtonBorderBrush" RadiusX="1.00959" RadiusY="1.00409" Center="0.310959,0.352055" GradientOrigin="0.310959,0.352055">
+        <RadialGradientBrush.GradientStops>
+            <GradientStop Color="#FF737373" Offset="0"/>
+            <GradientStop Color="#FF393939" Offset="0.49569"/>
+            <GradientStop Color="#FF000000" Offset="1"/>
+        </RadialGradientBrush.GradientStops>
+    </RadialGradientBrush>
+    <RadialGradientBrush x:Key="ButtonPressedBrush" RadiusX="0.504795" RadiusY="0.502044" Center="0.463014,0.364384" GradientOrigin="0.463014,0.364384">
+        <RadialGradientBrush.GradientStops>
+            <GradientStop Color="#FFFFFFFF" Offset="0"/>
+            <GradientStop Color="#FFB5B5B5" Offset="0.312779"/>
+            <GradientStop Color="#FF6C6B6B" Offset="0.797414"/>
+        </RadialGradientBrush.GradientStops>
+    </RadialGradientBrush>
+
 
     <!-- Converters -->
     <conv:PointsConverter x:Key="PointsConverter" />
@@ -46,6 +72,190 @@
         <Setter Property="BorderBrush" Value="{StaticResource MainBackgroundBorderBrush}" />
         <Setter Property="BorderThickness" Value="2" />
         <Setter Property="CornerRadius" Value="3" />
+    </Style>
+
+    <!-- Button style -->
+    <Style TargetType="{x:Type Button}">
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid Height="{TemplateBinding Height}"
+                          Width="{TemplateBinding Width}">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0:0:0.02" />
+                                    <VisualTransition GeneratedDuration="0"
+                                  To="Pressed" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+                                                 Storyboard.TargetName="Highlight">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                            Value="{x:Static Visibility.Visible}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+                                                 Storyboard.TargetName="Pusher">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                            Value="{x:Static Visibility.Hidden}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+                                                 Storyboard.TargetName="Pushed">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                            Value="{x:Static Visibility.Visible}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+                                                 Storyboard.TargetName="Highlight">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                            Value="{x:Static Visibility.Visible}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="Pusher"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         To="0.2"/>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Ellipse Name="Border"
+                                 Stroke="{TemplateBinding BorderBrush}" 
+                                 StrokeThickness="5" />
+                        <Ellipse Name="Highlight"
+                                 Stroke="{StaticResource DisplayForegroundBrush}" 
+                                 StrokeThickness="1"
+                                 Visibility="Hidden">
+                            <Ellipse.Effect>
+                                <DropShadowEffect Color="{StaticResource DisplayForegroundGlowColor}"
+                                  BlurRadius="3" 
+                                  ShadowDepth="0" />
+                            </Ellipse.Effect>
+                        </Ellipse>
+                        <Ellipse Name="Pusher"
+                                 Stroke="Transparent"
+                                 StrokeThickness="3"
+                                 Fill="{TemplateBinding Background}" />
+                        <Ellipse Name="Pushed"                                 
+                                 Stroke="Transparent"
+                                 StrokeThickness="5"
+                                 Fill="{StaticResource ButtonPressedBrush}"
+                                 Visibility="Hidden"/>
+                        <ContentPresenter Margin="{TemplateBinding Padding}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Radio button style -->
+    <Style TargetType="{x:Type RadioButton}">
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RadioButton}">
+                    <BulletDecorator >
+                        <BulletDecorator.Bullet>
+                            <Grid Height="15" Width="15">
+                                <Ellipse Name="Border"
+                                 Stroke="{StaticResource ButtonBorderBrush}" 
+                                 StrokeThickness="5" />
+                                <Ellipse Name="Highlight"
+                                 Stroke="{StaticResource DisplayForegroundBrush}" 
+                                 StrokeThickness="1"
+                                 Visibility="Hidden">
+                                    <Ellipse.Effect>
+                                        <DropShadowEffect Color="{StaticResource DisplayForegroundGlowColor}"
+                                  BlurRadius="3" 
+                                  ShadowDepth="0" />
+                                    </Ellipse.Effect>
+                                </Ellipse>
+                                <Ellipse Name="Pusher"
+                                 Stroke="Transparent"
+                                 StrokeThickness="3"
+                                 Fill="{StaticResource ButtonBackgroundBrush}" />
+                                <Ellipse Name="Pushed"                                 
+                                 Stroke="Transparent"
+                                 StrokeThickness="5"
+                                 Fill="{StaticResource ButtonPressedBrush}"
+                                 Visibility="Hidden"/>
+                            </Grid>
+                        </BulletDecorator.Bullet>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualStateGroup.Transitions>
+                                    <VisualTransition GeneratedDuration="0:0:0.02" />
+                                    <VisualTransition GeneratedDuration="0" To="Pressed" />
+                                </VisualStateGroup.Transitions>
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+                                                 Storyboard.TargetName="Highlight">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                            Value="{x:Static Visibility.Visible}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+                                                 Storyboard.TargetName="Pusher">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                            Value="{x:Static Visibility.Hidden}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+                                                 Storyboard.TargetName="Pushed">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                            Value="{x:Static Visibility.Visible}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+                                                 Storyboard.TargetName="Highlight">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                            Value="{x:Static Visibility.Visible}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <DoubleAnimation Storyboard.TargetName="Pusher"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         To="0.2"/>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="CheckStates">
+                                <VisualState x:Name="Checked" />
+                                <VisualState x:Name="Unchecked"/>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="FocusStates">
+                                <VisualState x:Name="Focused" />
+                                <VisualState x:Name="Unfocused" />
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="ValidationStates">
+                                <VisualState x:Name="Valid" />
+                                <VisualState x:Name="InvalidUnfocused" />
+                                <VisualState x:Name="InvalidFocused" />
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <ContentPresenter VerticalAlignment="Top"
+                                          HorizontalAlignment="Center"
+                                          RecognizesAccessKey="True"/>
+                    </BulletDecorator>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
     </Style>
 
     <!-- Display TextBlock style -->
@@ -148,41 +358,56 @@
 
     <!-- Data template for pathfinding algorithm-->
     <DataTemplate x:Key="PathAlgorithmDataTemplate">
-        <StackPanel Orientation="Horizontal" SnapsToDevicePixels="False">
-            <RadioButton Foreground="{StaticResource MainForegroundBrush}"
+        <UniformGrid SnapsToDevicePixels="False" Columns="3">
+            <!-- A* -->
+            <StackPanel>
+                <Label HorizontalAlignment="Center">
+                    <TextBlock Foreground="{StaticResource MainForegroundBrush}"
+                               Style="{StaticResource ShadowedTextBlockStyle}" 
+                               Text="A*" />
+                </Label>
+                <RadioButton HorizontalAlignment="Center" 
+                             Foreground="{StaticResource MainForegroundBrush}"
                          IsChecked="{Binding Path=DataContext.PathAlgorithm,
                 RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}},
                 Converter={StaticResource EnumToBoolConverter}, 
-                ConverterParameter={x:Static mod:PathAlgorithm.AStar}}">
-                <TextBlock Text="A*"
-                           Style="{StaticResource ShadowedTextBlockStyle}" />
-            </RadioButton>
-            <RadioButton Foreground="{StaticResource MainForegroundBrush}"
+                ConverterParameter={x:Static mod:PathAlgorithm.AStar}}" />
+            </StackPanel>
+            <!-- BFS -->
+            <StackPanel>
+                <Label HorizontalAlignment="Center">
+                    <TextBlock Foreground="{StaticResource MainForegroundBrush}"
+                               Style="{StaticResource ShadowedTextBlockStyle}" 
+                               Text="BFS" />
+                </Label>
+                <RadioButton HorizontalAlignment="Center"
+                             Foreground="{StaticResource MainForegroundBrush}"
                          IsChecked="{Binding Path=DataContext.PathAlgorithm,
                 RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}},
                 Converter={StaticResource EnumToBoolConverter}, 
-                ConverterParameter={x:Static mod:PathAlgorithm.BFS}}">
-                <TextBlock Text="BFS"
-                           Style="{StaticResource ShadowedTextBlockStyle}" />
-            </RadioButton>
-            <RadioButton Foreground="{StaticResource MainForegroundBrush}"
+                ConverterParameter={x:Static mod:PathAlgorithm.BFS}}" />
+            </StackPanel>
+            <!-- Dijkstra -->
+            <StackPanel>
+                <Label HorizontalAlignment="Center">
+                    <TextBlock Foreground="{StaticResource MainForegroundBrush}"
+                               Style="{StaticResource ShadowedTextBlockStyle}" 
+                               Text="Dijkstra" />
+                </Label>
+                <RadioButton HorizontalAlignment="Center" 
+                             Foreground="{StaticResource MainForegroundBrush}"
                          IsChecked="{Binding Path=DataContext.PathAlgorithm,
                 RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}},
                 Converter={StaticResource EnumToBoolConverter}, 
-                ConverterParameter={x:Static mod:PathAlgorithm.Dijkstra}}">
-                <TextBlock Text="Dijkstra's"
-                           Style="{StaticResource ShadowedTextBlockStyle}" />
-            </RadioButton>
-        </StackPanel>
+                ConverterParameter={x:Static mod:PathAlgorithm.Dijkstra}}" />
+            </StackPanel>
+        </UniformGrid>
     </DataTemplate>
 
     <!-- Data template for message display -->
     <DataTemplate x:Key="MessageDisplayDataTemplate">
         <Border Background="{StaticResource DisplayBackgroundBrush}"
-                Style="{StaticResource DisplayBorderStyle}"
-                Height="150" 
-                Width="150"
-                Padding="5">
+                Style="{StaticResource DisplayBorderStyle}" Padding="5">
             <Grid>
                 <!--Message field-->
                 <TextBlock Text="{Binding ErrorMessage}"
@@ -203,26 +428,57 @@
                 <!-- Status indicator-->
                 <StackPanel HorizontalAlignment="Right"
                             VerticalAlignment="Bottom"
+                            Orientation="Horizontal"
                             ext:StateManager.VisualStateProperty="{Binding State}">
                     <VisualStateManager.VisualStateGroups>
                         <VisualStateGroup Name="{x:Static mod:CanvasState.GroupName}">
                             <VisualStateGroup.Transitions>
-                                <VisualTransition GeneratedDuration="00:00:01">
+                                <VisualTransition GeneratedDuration="00:00:00.1">
                                 </VisualTransition>
                             </VisualStateGroup.Transitions>
                             <VisualState Name="{x:Static mod:CanvasState.ErrorState}">
                                 <Storyboard>
-                                    <DoubleAnimation Storyboard.TargetName="Indicator" 
-                                                     Storyboard.TargetProperty="(UIElement.Opacity)" 
-                                                     To="0" />
+                                    <ColorAnimation Storyboard.TargetName="Indicator" 
+                                                     Storyboard.TargetProperty="Fill.Color" 
+                                                     To="{StaticResource DisplayErrorColor}" />
+                                    <StringAnimationUsingKeyFrames Storyboard.TargetName="StatusText"
+                                                                   Storyboard.TargetProperty="Text">
+                                        <DiscreteStringKeyFrame Value="ERROR" KeyTime="0:0:0" />
+                                    </StringAnimationUsingKeyFrames>
                                 </Storyboard>
                             </VisualState>
                             <VisualState Name="{x:Static mod:CanvasState.BusyState}">
+                                <Storyboard>
+                                    <ColorAnimation Storyboard.TargetName="Indicator" 
+                                                     Storyboard.TargetProperty="Fill.Color" 
+                                                     To="{StaticResource DisplayBusyColor}" />
+                                    <StringAnimationUsingKeyFrames Storyboard.TargetName="StatusText"
+                                                                   Storyboard.TargetProperty="Text">
+                                        <DiscreteStringKeyFrame Value="BUSY" KeyTime="0:0:0" />
+                                    </StringAnimationUsingKeyFrames>
+                                    <DoubleAnimation Storyboard.TargetName="Indicator"
+                                                     Storyboard.TargetProperty="Opacity"
+                                                     Duration="00:00:00.2"
+                                                     From="1" To="0.35" RepeatBehavior="Forever" AutoReverse="True"/>
+                                </Storyboard>
                             </VisualState>
                             <VisualState Name="{x:Static mod:CanvasState.ReadyState}">
+                                <Storyboard>
+                                    <ColorAnimation Storyboard.TargetName="Indicator" 
+                                                     Storyboard.TargetProperty="Fill.Color" 
+                                                     To="{StaticResource DisplayForegroundColor}" />
+                                    <StringAnimationUsingKeyFrames Storyboard.TargetName="StatusText"
+                                                                   Storyboard.TargetProperty="Text">
+                                        <DiscreteStringKeyFrame Value="READY" KeyTime="0:0:0" />
+                                    </StringAnimationUsingKeyFrames>
+                                </Storyboard>
                             </VisualState>
                         </VisualStateGroup>
                     </VisualStateManager.VisualStateGroups>
+                    <TextBlock Name="StatusText"
+                               Text="Ready"
+                               Margin="5,0,5,0"
+                               Style="{StaticResource DisplayTextBlockStyle}"/>
                     <Ellipse Name="Indicator" 
                              Height="7" 
                              Width="7"
@@ -232,7 +488,7 @@
                             <DropShadowEffect Color="{StaticResource DisplayForegroundGlowColor}"
                                           BlurRadius="5" 
                                           ShadowDepth="0" />
-                        </Ellipse.Effect>                        
+                        </Ellipse.Effect>
                     </Ellipse>
                 </StackPanel>
             </Grid>

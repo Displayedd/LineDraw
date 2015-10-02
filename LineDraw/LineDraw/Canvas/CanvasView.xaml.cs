@@ -11,13 +11,14 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using CustomControlWPF;
 
 namespace LineDraw.Canvas
 {
     /// <summary>
     /// Interaction logic for CanvasView.xaml
     /// </summary>
-    public partial class CanvasView : Window
+    public partial class CanvasView : CustomWindow
     {
         /// <summary>
         /// Instatiate a new instance of this class.

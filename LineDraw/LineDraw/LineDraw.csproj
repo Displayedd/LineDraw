@@ -155,6 +155,12 @@
   <ItemGroup>
     <Resource Include="Resources\MainDisplayGrid.png" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\CustomWindow\CustomWindow.csproj">
+      <Project>{0c55ff8f-7e77-4792-92e9-c9cca000bac8}</Project>
+      <Name>CustomWindow</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
