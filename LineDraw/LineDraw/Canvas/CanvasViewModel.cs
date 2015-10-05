@@ -25,6 +25,7 @@ namespace LineDraw.Canvas
         private readonly ILineService lineService;
         private ICommand selectPointCommand;
         private ICommand clearLinesCommand;
+        private ICommand applicationCloseCommand;
 
         private Point endPoint;
         private Point startPoint;
@@ -102,6 +103,19 @@ namespace LineDraw.Canvas
                 if (clearLinesCommand == null)
                     clearLinesCommand = new DelegateCommand(ClearLines);
                 return clearLinesCommand;
+            }
+        }
+
+        /// <summary>
+        /// Command object for closeing application.
+        /// </summary>
+        public ICommand ApplicationCloseCommand
+        {
+            get
+            {
+                if (applicationCloseCommand == null)
+                    applicationCloseCommand = new DelegateCommand(ApplicationClose);
+                return applicationCloseCommand;
             }
         }
 
@@ -250,7 +264,18 @@ namespace LineDraw.Canvas
             // Clear points
             this.StartPoint = null;
             this.EndPoint = null;
+            // Clear error message
+            this.ErrorMessage = null;
+            // Set state
             this.State = CanvasState.ReadyState;
+        }
+
+        /// <summary>
+        /// Shut down the application.
+        /// </summary>
+        private void ApplicationClose()
+        {
+            Application.Current.Shutdown();
         }
     }
 }

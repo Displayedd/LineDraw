@@ -5,7 +5,8 @@
         xmlns:cust="clr-namespace:CustomControlWPF;assembly=CustomControlWPF"
         Title="Line draw" 
         ResizeMode="NoResize" 
-        SizeToContent="WidthAndHeight">
+        SizeToContent="WidthAndHeight"
+                   Foreground="Black">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -27,10 +28,12 @@
             </Grid.ColumnDefinitions>
             <!-- Message display-->
             <ContentControl Content="{Binding}"
+                            Grid.Column="1"
                             ContentTemplate="{StaticResource MessageDisplayDataTemplate}"
-                            HorizontalAlignment="Left" 
+                            HorizontalAlignment="Right" 
                             Height="150"
-                            Width="150"/>
+                            Width="150" 
+                            IsTabStop="False"/>
             <!--Main display-->
             <Border Grid.ColumnSpan="2"
                     Grid.Row="1"
@@ -39,9 +42,10 @@
                 <Grid>
                     <!-- Lines-->
                     <ItemsControl Height="{Binding CanvasHeight}" 
-                          Width="{Binding CanvasWidth}" 
-                          ItemsSource="{Binding Lines}"
-                          ItemTemplate="{StaticResource LineItemDataTemplate}">
+                                  Width="{Binding CanvasWidth}" 
+                                  ItemsSource="{Binding Lines}"
+                                  ItemTemplate="{StaticResource LineItemDataTemplate}"
+                                  IsTabStop="False">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <Canvas Background="{StaticResource DisplayBackgroundBrush}" 
@@ -51,7 +55,8 @@
                     </ItemsControl>
                     <!--Selected points-->
                     <ContentControl ContentTemplate="{StaticResource PointContentDataTemplate}"
-                            IsHitTestVisible="False"/>
+                                    IsHitTestVisible="False"
+                                    IsTabStop="False"/>
                     <!--Display grid-->
                     <Border IsHitTestVisible="False">
                         <Border.Background>
@@ -65,25 +70,24 @@
                 </Grid>
             </Border>
             <!-- Push buttons -->
-            <StackPanel Grid.Column="1" 
-                        HorizontalAlignment="Left">
-                <!--Reset button, TODO: create control template -->
-                <StackPanel>
-                    <Label HorizontalAlignment="Center">
-                        <TextBlock Foreground="{StaticResource MainForegroundBrush}"
-                               Style="{StaticResource ShadowedTextBlockStyle}" 
-                               Text="Reset" />
-                    </Label>
-                    <Button Command="{Binding ClearLinesCommand}"
-                            Background="{StaticResource ButtonBackgroundBrush}"
-                            BorderBrush="{StaticResource ButtonBorderBrush}"
-                            Height="20"
-                            Width="20" />
-                </StackPanel>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition  Width="150"/>
+                </Grid.ColumnDefinitions>
+                <!--Reset/Power buttons -->
+                <ContentControl ContentTemplate="{StaticResource MainButtonsTemplate}"
+                                Content="{Binding}"
+                                Margin="4"/>
                 <!--Path finding buttons-->
                 <ContentControl ContentTemplate="{StaticResource PathAlgorithmDataTemplate}"
-                            HorizontalAlignment="Center" />
-            </StackPanel>
+                                Grid.Row="1"
+                                HorizontalAlignment="Center"
+                                IsTabStop="False"/>
+            </Grid>
         </Grid>
     </Border>
 </cust:CustomWindow>

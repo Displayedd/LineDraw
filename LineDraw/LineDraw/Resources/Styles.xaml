@@ -20,25 +20,18 @@
     </RadialGradientBrush>
     <SolidColorBrush x:Key="DisplayForegroundBrush" Color="{StaticResource DisplayForegroundColor}" />
     <SolidColorBrush x:Key="DisplayForegroundGlowBrush" Color="{StaticResource DisplayForegroundGlowColor}" />
+    <SolidColorBrush x:Key="DisplayBusyBrush" Color="{StaticResource DisplayBusyColor}" />
     <LinearGradientBrush x:Key="MainBackgroundBorderBrush" EndPoint="0,0" StartPoint="1,1">
         <GradientStop Color="#FFA8ACB6"/>
         <GradientStop Color="#FF747C8D" Offset="0.5"/>
         <GradientStop Color="#FF464646" Offset="0.5"/>
         <GradientStop Color="#FF191919" Offset="1"/>
     </LinearGradientBrush>
-    <LinearGradientBrush x:Key="MainBackgroundBrush" StartPoint="0.5,0.0" EndPoint="0.5,1">
-        <LinearGradientBrush.GradientStops>
-            <GradientStop Color="#FF262D26" Offset="0.25431"/>
-            <GradientStop Color="#FF434943" Offset="0.467381"/>
-            <GradientStop Color="#FF616561" Offset="0.508621"/>
-            <GradientStop Color="#FFA4A6A4" Offset="0.549261"/>
-            <GradientStop Color="#FFE7E7E7" Offset="0.560345"/>
-            <GradientStop Color="#FFABADAB" Offset="0.571552"/>
-            <GradientStop Color="#FF707470" Offset="0.616379"/>
-            <GradientStop Color="#FF4B504B" Offset="0.646329"/>
-            <GradientStop Color="#FF262D26" Offset="0.75"/>
-        </LinearGradientBrush.GradientStops>
-    </LinearGradientBrush>
+    <VisualBrush x:Key="MainBackgroundBrush" TileMode="None">
+        <VisualBrush.Visual>
+            <Image Source="pack://application:,,,/LineDraw;component/Resources/background.jpg" />
+        </VisualBrush.Visual>
+    </VisualBrush>
     <SolidColorBrush x:Key="MainForegroundBrush" Color="White" />
     <RadialGradientBrush x:Key="ButtonBackgroundBrush" RadiusX="0.50" RadiusY="0.50" Center="0.46,0.36" GradientOrigin="0.40,0.36">
         <RadialGradientBrush.GradientStops>
@@ -77,6 +70,7 @@
     <!-- Button style -->
     <Style TargetType="{x:Type Button}">
         <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="IsTabStop" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
@@ -111,6 +105,10 @@
                                             <DiscreteObjectKeyFrame KeyTime="0"
                                             Value="{x:Static Visibility.Visible}" />
                                         </ObjectAnimationUsingKeyFrames>
+                                        <ColorAnimation Storyboard.TargetProperty="Stroke.Color"
+                                                        Storyboard.TargetName="Highlight" 
+                                                        To="{StaticResource DisplayForegroundColor}" 
+                                                        Duration="0"/>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
                                                  Storyboard.TargetName="Highlight">
                                             <DiscreteObjectKeyFrame KeyTime="0"
@@ -131,7 +129,7 @@
                                  Stroke="{TemplateBinding BorderBrush}" 
                                  StrokeThickness="5" />
                         <Ellipse Name="Highlight"
-                                 Stroke="{StaticResource DisplayForegroundBrush}" 
+                                 Stroke="{StaticResource DisplayBusyBrush}" 
                                  StrokeThickness="1"
                                  Visibility="Hidden">
                             <Ellipse.Effect>
@@ -161,6 +159,7 @@
     <!-- Radio button style -->
     <Style TargetType="{x:Type RadioButton}">
         <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="IsTabStop" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type RadioButton}">
@@ -171,6 +170,16 @@
                                  Stroke="{StaticResource ButtonBorderBrush}" 
                                  StrokeThickness="5" />
                                 <Ellipse Name="Highlight"
+                                 Stroke="{StaticResource DisplayBusyBrush}" 
+                                 StrokeThickness="1"
+                                 Visibility="Hidden">
+                                    <Ellipse.Effect>
+                                        <DropShadowEffect Color="{StaticResource DisplayForegroundGlowColor}"
+                                  BlurRadius="3" 
+                                  ShadowDepth="0" />
+                                    </Ellipse.Effect>
+                                </Ellipse>
+                                <Ellipse Name="Check"
                                  Stroke="{StaticResource DisplayForegroundBrush}" 
                                  StrokeThickness="1"
                                  Visibility="Hidden">
@@ -235,7 +244,25 @@
                                 </VisualState>
                             </VisualStateGroup>
                             <VisualStateGroup x:Name="CheckStates">
-                                <VisualState x:Name="Checked" />
+                                <VisualState x:Name="Checked">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+                                                 Storyboard.TargetName="Pusher">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                            Value="{x:Static Visibility.Hidden}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+                                                 Storyboard.TargetName="Pushed">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                            Value="{x:Static Visibility.Visible}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+                                                 Storyboard.TargetName="Check">
+                                            <DiscreteObjectKeyFrame KeyTime="0"
+                                            Value="{x:Static Visibility.Visible}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
                                 <VisualState x:Name="Unchecked"/>
                             </VisualStateGroup>
                             <VisualStateGroup x:Name="FocusStates">
@@ -493,5 +520,37 @@
                 </StackPanel>
             </Grid>
         </Border>
+    </DataTemplate>
+
+    <!-- Data template for Reset & Power button -->
+    <DataTemplate x:Key="MainButtonsTemplate">
+        <DockPanel HorizontalAlignment="Stretch">
+            <StackPanel DockPanel.Dock="Left">
+                <Label HorizontalAlignment="Center"
+                           IsTabStop="False">
+                    <TextBlock Foreground="{StaticResource MainForegroundBrush}"
+                               Style="{StaticResource ShadowedTextBlockStyle}" 
+                               Text="Power" />
+                </Label>
+                <Button Command="{Binding ApplicationCloseCommand}"
+                            Background="{StaticResource ButtonBackgroundBrush}"
+                            BorderBrush="{StaticResource ButtonBorderBrush}"
+                            Height="20"
+                            Width="20" />
+            </StackPanel>
+            <StackPanel DockPanel.Dock="Right" HorizontalAlignment="Right">
+                <Label HorizontalAlignment="Center"
+                       IsTabStop="False">
+                    <TextBlock Foreground="{StaticResource MainForegroundBrush}"
+                               Style="{StaticResource ShadowedTextBlockStyle}" 
+                               Text="Reset" />
+                </Label>
+                <Button Command="{Binding ClearLinesCommand}"
+                            Background="{StaticResource ButtonBackgroundBrush}"
+                            BorderBrush="{StaticResource ButtonBorderBrush}"
+                            Height="20"
+                            Width="20" />
+            </StackPanel>
+        </DockPanel>
     </DataTemplate>
 </ResourceDictionary>
