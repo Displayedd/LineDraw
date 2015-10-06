@@ -175,7 +175,8 @@ namespace LineDraw.Canvas
             this.CanvasWidth = canvasSize.Width - 1;
             this.Lines = new ObservableCollection<Point[]>();
             // Default pathfinding algorithm
-            this.PathAlgorithm = PathAlgorithm.BFS;
+            this.PathAlgorithm = PathAlgorithm.AStar;
+            // Default message
         }
 
         /// <summary>

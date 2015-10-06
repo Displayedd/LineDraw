@@ -2,7 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:conv="clr-namespace:LineDraw.Converters"
                     xmlns:mod="clr-namespace:LineDraw.Models"
-                    xmlns:ext="clr-namespace:LineDraw.External">
+                    xmlns:ext="clr-namespace:LineDraw.External"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
     <!-- Colors -->
     <Color x:Key="DisplayForegroundColor">#FF9BCA26</Color>
@@ -55,6 +56,10 @@
         </RadialGradientBrush.GradientStops>
     </RadialGradientBrush>
 
+    <!-- Default message for message display -->
+    <sys:String x:Key="DefaultMessage">
+        Select a pathfinding algorithm then click two points on the main display to draw non-intersecting lines.
+    </sys:String>
 
     <!-- Converters -->
     <conv:PointsConverter x:Key="PointsConverter" />
@@ -437,7 +442,7 @@
                 Style="{StaticResource DisplayBorderStyle}" Padding="5">
             <Grid>
                 <!--Message field-->
-                <TextBlock Text="{Binding ErrorMessage}"
+                <TextBlock Text="{Binding ErrorMessage, TargetNullValue={StaticResource DefaultMessage}}"
                            DockPanel.Dock="Top"
                            HorizontalAlignment="Left"
                            Style="{StaticResource DisplayTextBlockStyle}"

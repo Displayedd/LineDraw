@@ -36,7 +36,7 @@ namespace LineDraw.Tests.Models
             Assert.AreEqual(CanvasState.ReadyState, target.State);
             Assert.IsInstanceOfType(target.SelectPointCommand, typeof(ICommand));
             Assert.IsInstanceOfType(target.Lines, typeof(ObservableCollection<Point[]>));
-            Assert.AreEqual(PathAlgorithm.BFS, target.PathAlgorithm);
+            Assert.AreEqual(PathAlgorithm.AStar, target.PathAlgorithm);
             mockedLineService.VerifyAll();
         }
                 
@@ -107,7 +107,7 @@ namespace LineDraw.Tests.Models
             //Act
             target.StartPoint = new Point();
             target.EndPoint = new Point();
-            target.PathAlgorithm = PathAlgorithm.AStar;
+            target.PathAlgorithm = PathAlgorithm.BFS;
             target.ErrorMessage = "";
             target.TimeMessage = "";
             target.State = CanvasState.BusyState;
